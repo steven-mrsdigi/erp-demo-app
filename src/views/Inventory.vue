@@ -55,6 +55,8 @@
         :headers="stockHeaders"
         :items="stockData"
         :loading="loading"
+        v-model:sort-by="sortBy"
+        @update:sort-by="handleSort"
         class="d-none d-md-block"
         density="compact"
       >
@@ -197,6 +199,7 @@ const products = ref([])
 const loading = ref(true)
 const showMovementDialog = ref(false)
 const saving = ref(false)
+const sortBy = ref([{ key: 'name', order: 'asc' }])
 
 const movementForm = ref({
   product_id: null,
@@ -213,11 +216,11 @@ const movementTypes = [
 ]
 
 const stockHeaders = [
-  { title: 'Product', key: 'name' },
-  { title: 'SKU', key: 'sku' },
-  { title: 'On Hand', key: 'stock_quantity' },
-  { title: 'Allocated', key: 'allocated_qty' },
-  { title: 'Available', key: 'available_qty' }
+  { title: 'Product', key: 'name', sortable: true },
+  { title: 'SKU', key: 'sku', sortable: true },
+  { title: 'On Hand', key: 'stock_quantity', sortable: true },
+  { title: 'Allocated', key: 'allocated_qty', sortable: true },
+  { title: 'Available', key: 'available_qty', sortable: true }
 ]
 
 const movementHeaders = [
@@ -247,8 +250,10 @@ onMounted(async () => {
 async function loadData() {
   loading.value = true
   try {
+    const sort = sortBy.value[0]?.key || 'name'
+    const order = sortBy.value[0]?.order === 'asc' ? 'asc' : 'desc'
     const [inventoryRes, productsRes] = await Promise.all([
-      get('/inventory'),
+      get(`/inventory?sort=${sort}&order=${order}`),
       get('/products')
     ])
     stockData.value = inventoryRes.stock || []
@@ -259,6 +264,11 @@ async function loadData() {
   } finally {
     loading.value = false
   }
+}
+
+function handleSort(sort) {
+  sortBy.value = sort
+  loadData()
 }
 
 async function saveMovement() {
