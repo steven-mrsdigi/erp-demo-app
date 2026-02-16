@@ -7,7 +7,7 @@
         color="primary" 
         size="small"
         :size="isMobile ? 'small' : 'default'"
-        @click="showAddDialog = true"
+        @click="openAddDialog"
         prepend-icon="mdi-plus"
       >
         <span class="d-none d-sm-inline">Add Product</span>
@@ -104,7 +104,7 @@
     <v-dialog v-model="showAddDialog" max-width="600" :fullscreen="isMobile">
       <v-card>
         <v-card-title class="text-h6">
-          Add Product
+          {{ isEditing ? 'Edit Product' : 'Add Product' }}
           <v-spacer></v-spacer>
           <v-btn icon @click="showAddDialog = false" class="d-md-none">
             <v-icon>mdi-close</v-icon>
@@ -130,7 +130,7 @@
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
           <v-btn text @click="showAddDialog = false">Cancel</v-btn>
-          <v-btn color="primary" @click="saveProduct">Save</v-btn>
+          <v-btn color="primary" @click="saveProduct">{{ isEditing ? 'Update' : 'Save' }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -142,13 +142,15 @@ import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useDisplay } from 'vuetify'
 
-const { get, post, loading } = useApi()
+const { get, post, patch, loading } = useApi()
 const { mdAndUp } = useDisplay()
 
 const isMobile = computed(() => !mdAndUp.value)
 
 const products = ref([])
 const showAddDialog = ref(false)
+const isEditing = ref(false)
+const editingProductId = ref(null)
 const categories = ['Electronics', 'Accessories', 'Software', 'Services']
 
 const newProduct = ref({
@@ -182,18 +184,44 @@ onMounted(async () => {
 
 async function saveProduct() {
   try {
-    await post('/products', newProduct.value)
+    if (isEditing.value) {
+      // Update existing product
+      await patch('/products', { id: editingProductId.value, ...newProduct.value })
+    } else {
+      // Create new product
+      await post('/products', newProduct.value)
+    }
     showAddDialog.value = false
     const response = await get('/products')
     products.value = response.data || []
-    newProduct.value = { name: '', sku: '', description: '', price: 0, stock_quantity: 0, category: '' }
+    newProduct.value = { name: '', sku: '', description: '', price: 0, tax_rate: 0, stock_quantity: 0, category: '' }
+    isEditing.value = false
+    editingProductId.value = null
   } catch (error) {
     console.error('Failed to save product:', error)
   }
 }
 
+function openAddDialog() {
+  isEditing.value = false
+  editingProductId.value = null
+  newProduct.value = { name: '', sku: '', description: '', price: 0, tax_rate: 0, stock_quantity: 0, category: '' }
+  showAddDialog.value = true
+}
+
 function editItem(item) {
-  console.log('Edit:', item)
+  isEditing.value = true
+  editingProductId.value = item.id
+  newProduct.value = {
+    name: item.name || '',
+    sku: item.sku || '',
+    description: item.description || '',
+    price: item.price || 0,
+    tax_rate: item.tax_rate || 0,
+    stock_quantity: item.stock_quantity || 0,
+    category: item.category || ''
+  }
+  showAddDialog.value = true
 }
 
 function deleteItem(item) {
