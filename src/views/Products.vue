@@ -115,17 +115,29 @@
           <v-text-field v-model="newProduct.sku" label="SKU" required density="comfortable"></v-text-field>
           <v-textarea v-model="newProduct.description" label="Description" rows="2" density="comfortable"></v-textarea>
           <v-row>
-            <v-col cols="12" sm="4">
+            <v-col cols="12" sm="6">
               <v-text-field v-model="newProduct.price" label="Price" type="number" prefix="$" density="comfortable"></v-text-field>
             </v-col>
-            <v-col cols="12" sm="4">
-              <v-text-field v-model="newProduct.tax_rate" label="Tax Rate" type="number" suffix="%" density="comfortable"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="4">
-              <v-text-field v-model="newProduct.stock_quantity" label="Stock" type="number" density="comfortable"></v-text-field>
+            <v-col cols="12" sm="6">
+              <v-select
+                v-model="newProduct.tax_rate_id"
+                :items="taxRates"
+                item-title="name"
+                item-value="id"
+                label="Tax Rate"
+                density="comfortable"
+                clearable
+              ></v-select>
             </v-col>
           </v-row>
-          <v-select v-model="newProduct.category" label="Category" :items="categories" density="comfortable"></v-select>
+          <v-row>
+            <v-col cols="12" sm="6">
+              <v-text-field v-model="newProduct.stock_quantity" label="Stock Quantity" type="number" density="comfortable"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-select v-model="newProduct.category" label="Category" :items="categories" density="comfortable"></v-select>
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
@@ -148,6 +160,7 @@ const { mdAndUp } = useDisplay()
 const isMobile = computed(() => !mdAndUp.value)
 
 const products = ref([])
+const taxRates = ref([])
 const showAddDialog = ref(false)
 const isEditing = ref(false)
 const editingProductId = ref(null)
@@ -158,7 +171,7 @@ const newProduct = ref({
   sku: '',
   description: '',
   price: 0,
-  tax_rate: 0,
+  tax_rate_id: null,
   stock_quantity: 0,
   category: ''
 })
@@ -174,13 +187,21 @@ const headers = [
 ]
 
 onMounted(async () => {
-  try {
-    const response = await get('/products')
-    products.value = response.data || []
-  } catch (error) {
-    console.error('Failed to load products:', error)
-  }
+  await loadData()
 })
+
+async function loadData() {
+  try {
+    const [productsRes, taxRatesRes] = await Promise.all([
+      get('/products'),
+      get('/tax-rates')
+    ])
+    products.value = productsRes.data || []
+    taxRates.value = taxRatesRes.data || []
+  } catch (error) {
+    console.error('Failed to load data:', error)
+  }
+}
 
 async function saveProduct() {
   try {
@@ -192,9 +213,8 @@ async function saveProduct() {
       await post('/products', newProduct.value)
     }
     showAddDialog.value = false
-    const response = await get('/products')
-    products.value = response.data || []
-    newProduct.value = { name: '', sku: '', description: '', price: 0, tax_rate: 0, stock_quantity: 0, category: '' }
+    await loadData()
+    newProduct.value = { name: '', sku: '', description: '', price: 0, tax_rate_id: null, stock_quantity: 0, category: '' }
     isEditing.value = false
     editingProductId.value = null
   } catch (error) {
@@ -205,7 +225,7 @@ async function saveProduct() {
 function openAddDialog() {
   isEditing.value = false
   editingProductId.value = null
-  newProduct.value = { name: '', sku: '', description: '', price: 0, tax_rate: 0, stock_quantity: 0, category: '' }
+  newProduct.value = { name: '', sku: '', description: '', price: 0, tax_rate_id: null, stock_quantity: 0, category: '' }
   showAddDialog.value = true
 }
 
@@ -217,7 +237,7 @@ function editItem(item) {
     sku: item.sku || '',
     description: item.description || '',
     price: item.price || 0,
-    tax_rate: item.tax_rate || 0,
+    tax_rate_id: item.tax_rate_id || null,
     stock_quantity: item.stock_quantity || 0,
     category: item.category || ''
   }
