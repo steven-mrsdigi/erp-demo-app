@@ -225,8 +225,10 @@
           
           <v-divider class="my-4"></v-divider>
           
-          <div class="d-flex justify-end">
-            <div class="text-h6">Total: ${{ calculateTotal() }}</div>
+          <div class="d-flex flex-column align-end">
+            <div class="text-body-1">Subtotal: ${{ calculateSubtotal() }}</div>
+            <div class="text-body-1">Tax ({{ calculateTotalTaxRate() }}%): ${{ calculateTax() }}</div>
+            <div class="text-h6 mt-2">Total: ${{ calculateGrandTotal() }}</div>
           </div>
         </v-card-text>
         <v-card-actions class="pa-4">
@@ -322,8 +324,53 @@ function updateItemTotal(item) {
   item.total_price = (item.quantity || 0) * (item.unit_price || 0)
 }
 
+function calculateSubtotal() {
+  return newOrder.value.items.reduce((sum, item) => {
+    const qty = parseInt(item.quantity) || 0
+    const price = parseFloat(item.unit_price) || 0
+    return sum + (qty * price)
+  }, 0).toFixed(2)
+}
+
+function calculateTax() {
+  let tax = 0
+  newOrder.value.items.forEach(item => {
+    const product = products.value.find(p => p.id === item.product_id)
+    if (product && product.tax_rate) {
+      const qty = parseInt(item.quantity) || 0
+      const price = parseFloat(item.unit_price) || 0
+      tax += (qty * price) * (parseFloat(product.tax_rate) / 100)
+    }
+  })
+  return tax.toFixed(2)
+}
+
+function calculateTotalTaxRate() {
+  // Calculate weighted average tax rate
+  let totalAmount = 0
+  let totalTax = 0
+  newOrder.value.items.forEach(item => {
+    const product = products.value.find(p => p.id === item.product_id)
+    const qty = parseInt(item.quantity) || 0
+    const price = parseFloat(item.unit_price) || 0
+    const itemAmount = qty * price
+    totalAmount += itemAmount
+    if (product && product.tax_rate) {
+      totalTax += itemAmount * (parseFloat(product.tax_rate) / 100)
+    }
+  })
+  return totalAmount > 0 ? ((totalTax / totalAmount) * 100).toFixed(1) : 0
+}
+
+function calculateGrandTotal() {
+  const subtotal = parseFloat(calculateSubtotal())
+  const tax = parseFloat(calculateTax())
+  return (subtotal + tax).toFixed(2)
+}
+
+// Keep for backwards compatibility
 function calculateTotal() {
-  return newOrder.value.items.reduce((sum, item) => sum + (item.total_price || 0), 0).toFixed(2)
+  return calculateGrandTotal()
 }
 
 function openCreateDialog() {

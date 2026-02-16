@@ -115,11 +115,14 @@
           <v-text-field v-model="newProduct.sku" label="SKU" required density="comfortable"></v-text-field>
           <v-textarea v-model="newProduct.description" label="Description" rows="2" density="comfortable"></v-textarea>
           <v-row>
-            <v-col cols="12" sm="6">
+            <v-col cols="12" sm="4">
               <v-text-field v-model="newProduct.price" label="Price" type="number" prefix="$" density="comfortable"></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field v-model="newProduct.stock_quantity" label="Stock Quantity" type="number" density="comfortable"></v-text-field>
+            <v-col cols="12" sm="4">
+              <v-text-field v-model="newProduct.tax_rate" label="Tax Rate" type="number" suffix="%" density="comfortable"></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="4">
+              <v-text-field v-model="newProduct.stock_quantity" label="Stock" type="number" density="comfortable"></v-text-field>
             </v-col>
           </v-row>
           <v-select v-model="newProduct.category" label="Category" :items="categories" density="comfortable"></v-select>
@@ -153,6 +156,7 @@ const newProduct = ref({
   sku: '',
   description: '',
   price: 0,
+  tax_rate: 0,
   stock_quantity: 0,
   category: ''
 })
