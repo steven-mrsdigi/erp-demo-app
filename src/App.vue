@@ -123,6 +123,7 @@ const menuItems = [
   { title: 'Orders', path: '/orders', icon: 'mdi-cart' },
   { title: 'Vendors', path: '/vendors', icon: 'mdi-store' },
   { title: 'Inventory', path: '/inventory', icon: 'mdi-warehouse' },
+  { title: 'Tax Rates', path: '/tax-rates', icon: 'mdi-percent' },
   { title: 'Reports', path: '/reports', icon: 'mdi-chart-bar' },
 ]
 

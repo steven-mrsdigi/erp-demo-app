@@ -6,6 +6,7 @@ import Orders from '@/views/Orders.vue'
 import Vendors from '@/views/Vendors.vue'
 import Inventory from '@/views/Inventory.vue'
 import Reports from '@/views/Reports.vue'
+import TaxRates from '@/views/TaxRates.vue'
 
 const routes = [
   { path: '/', name: 'Dashboard', component: Dashboard },
@@ -14,6 +15,7 @@ const routes = [
   { path: '/orders', name: 'Orders', component: Orders },
   { path: '/vendors', name: 'Vendors', component: Vendors },
   { path: '/inventory', name: 'Inventory', component: Inventory },
+  { path: '/tax-rates', name: 'Tax Rates', component: TaxRates },
   { path: '/reports', name: 'Reports', component: Reports },
 ]
 
