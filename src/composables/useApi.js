@@ -50,6 +50,13 @@ export function useApi() {
     })
   }
 
+  function patch(endpoint, data) {
+    return request(endpoint, {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    })
+  }
+
   function del(endpoint) {
     return request(endpoint, { method: 'DELETE' })
   }
@@ -60,6 +67,7 @@ export function useApi() {
     get,
     post,
     put,
+    patch,
     delete: del
   }
 }

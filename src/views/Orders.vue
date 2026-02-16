@@ -6,7 +6,7 @@
       <v-btn 
         color="primary" 
         :size="isMobile ? 'small' : 'default'"
-        @click="showAddDialog = true"
+        @click="openCreateDialog"
         prepend-icon="mdi-plus"
       >
         <span class="d-none d-sm-inline">Create Order</span>
@@ -39,8 +39,8 @@
       </template>
       
       <template v-slot:item.actions="{ item }">
-        <v-btn icon size="small" variant="text" @click="viewItem(item)">
-          <v-icon>mdi-eye</v-icon>
+        <v-btn icon size="small" variant="text" color="primary" @click="editItem(item)">
+          <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn icon size="small" variant="text" color="error" @click="deleteItem(item)">
           <v-icon>mdi-delete</v-icon>
@@ -72,9 +72,9 @@
               <div class="text-caption text-grey mt-1">{{ order.order_date }}</div>
             </v-card-text>
             <v-card-actions>
-              <v-btn size="small" variant="text" @click="viewItem(order)">
-                <v-icon size="small" class="mr-1">mdi-eye</v-icon>
-                View
+              <v-btn size="small" variant="text" color="primary" @click="editItem(order)">
+                <v-icon size="small" class="mr-1">mdi-pencil</v-icon>
+                Edit
               </v-btn>
               <v-btn size="small" variant="text" color="error" @click="deleteItem(order)">
                 <v-icon size="small" class="mr-1">mdi-delete</v-icon>
@@ -91,13 +91,13 @@
       No orders found. Click "Create Order" to create one.
     </v-alert>
 
-    <!-- Create Order Dialog -->
-    <v-dialog v-model="showAddDialog" max-width="800" :fullscreen="isMobile">
+    <!-- Order Dialog (Create/Edit) -->
+    <v-dialog v-model="showDialog" max-width="800" :fullscreen="isMobile">
       <v-card>
         <v-card-title class="text-h6 d-flex align-center">
-          Create Order
+          {{ isEditing ? 'Edit Order' : 'Create Order' }}
           <v-spacer></v-spacer>
-          <v-btn icon @click="showAddDialog = false" class="d-md-none">
+          <v-btn icon @click="showDialog = false" class="d-md-none">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
@@ -169,8 +169,8 @@
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
-          <v-btn text @click="showAddDialog = false">Cancel</v-btn>
-          <v-btn color="primary" @click="saveOrder">Create Order</v-btn>
+          <v-btn text @click="showDialog = false">Cancel</v-btn>
+          <v-btn color="primary" @click="saveOrder">{{ isEditing ? 'Update Order' : 'Create Order' }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -182,7 +182,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useDisplay } from 'vuetify'
 
-const { get, post, loading } = useApi()
+const { get, post, patch, loading } = useApi()
 const { mdAndUp } = useDisplay()
 
 const isMobile = computed(() => !mdAndUp.value)
@@ -190,7 +190,9 @@ const isMobile = computed(() => !mdAndUp.value)
 const orders = ref([])
 const customers = ref([])
 const products = ref([])
-const showAddDialog = ref(false)
+const showDialog = ref(false)
+const isEditing = ref(false)
+const editingOrderId = ref(null)
 
 const newOrder = ref({
   customer_id: null,
@@ -246,18 +248,88 @@ function calculateTotal() {
   return newOrder.value.items.reduce((sum, item) => sum + (item.total_price || 0), 0).toFixed(2)
 }
 
+function openCreateDialog() {
+  isEditing.value = false
+  editingOrderId.value = null
+  newOrder.value = {
+    customer_id: null,
+    items: [{ product_id: null, quantity: 1, unit_price: 0, total_price: 0 }]
+  }
+  showDialog.value = true
+}
+
+async function editItem(item) {
+  isEditing.value = true
+  editingOrderId.value = item.id
+  
+  // Fetch order items from separate endpoint
+  try {
+    const itemsRes = await get(`/order_items?order_id=eq.${item.id}`)
+    const orderItems = itemsRes.data || []
+    
+    if (orderItems.length > 0) {
+      newOrder.value = {
+        customer_id: item.customer_id,
+        items: orderItems.map(i => {
+          const quantity = parseInt(i.quantity) || 1
+          const unitPrice = parseFloat(i.unit_price) || 0
+          return {
+            product_id: i.product_id,
+            quantity: quantity,
+            unit_price: unitPrice,
+            total_price: quantity * unitPrice
+          }
+        }),
+        notes: item.notes || ''
+      }
+    } else {
+      // Fallback if no items found
+      newOrder.value = {
+        customer_id: item.customer_id,
+        items: [{ product_id: null, quantity: 1, unit_price: 0, total_price: 0 }],
+        notes: item.notes || ''
+      }
+    }
+  } catch (error) {
+    console.error('Failed to fetch order items:', error)
+    // Fallback
+    newOrder.value = {
+      customer_id: item.customer_id,
+      items: [{ product_id: null, quantity: 1, unit_price: 0, total_price: 0 }],
+      notes: item.notes || ''
+    }
+  }
+  
+  showDialog.value = true
+}
+
 async function saveOrder() {
   try {
     const orderData = {
       customer_id: newOrder.value.customer_id,
       items: newOrder.value.items,
-      total_amount: parseFloat(calculateTotal())
+      total_amount: parseFloat(calculateTotal()),
+      notes: newOrder.value.notes || ''
     }
-    await post('/orders', orderData)
-    showAddDialog.value = false
+    
+    if (isEditing.value) {
+      // Update existing order
+      await patch('/orders', {
+        action: 'update',
+        order_id: editingOrderId.value,
+        ...orderData
+      })
+    } else {
+      // Create new order
+      await post('/orders', orderData)
+    }
+    
+    showDialog.value = false
     const response = await get('/orders')
     orders.value = response.data || []
-    newOrder.value = { customer_id: null, items: [{ product_id: null, quantity: 1, unit_price: 0, total_price: 0 }] }
+    newOrder.value = { customer_id: null, items: [{ product_id: null, quantity: 1, unit_price: 0, total_price: 0 }], notes: '' }
+    isEditing.value = false
+    editingOrderId.value = null
   } catch (error) {
     console.error('Failed to save order:', error)
   }
@@ -271,10 +343,6 @@ function getStatusColor(status) {
     'cancelled': 'error'
   }
   return colors[status] || 'grey'
-}
-
-function viewItem(item) {
-  console.log('View:', item)
 }
 
 function deleteItem(item) {
