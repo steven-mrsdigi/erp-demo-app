@@ -20,6 +20,8 @@
       :headers="headers"
       :items="products"
       :loading="loading"
+      v-model:sort-by="sortBy"
+      @update:sort-by="handleSort"
       class="elevation-1 d-none d-md-block"
       density="comfortable"
     >
@@ -164,6 +166,7 @@ const taxRates = ref([])
 const showAddDialog = ref(false)
 const isEditing = ref(false)
 const editingProductId = ref(null)
+const sortBy = ref([{ key: 'created_at', order: 'desc' }])
 const categories = ['Electronics', 'Accessories', 'Software', 'Services']
 
 const newProduct = ref({
@@ -177,12 +180,12 @@ const newProduct = ref({
 })
 
 const headers = [
-  { title: 'SKU', key: 'sku', width: '120px' },
-  { title: 'Name', key: 'name' },
-  { title: 'Price', key: 'price', width: '100px' },
-  { title: 'Stock', key: 'stock_quantity', width: '100px' },
-  { title: 'Category', key: 'category', width: '120px' },
-  { title: 'Status', key: 'status', width: '100px' },
+  { title: 'SKU', key: 'sku', sortable: true, width: '120px' },
+  { title: 'Name', key: 'name', sortable: true },
+  { title: 'Price', key: 'price', sortable: true, width: '100px' },
+  { title: 'Stock', key: 'stock_quantity', sortable: true, width: '100px' },
+  { title: 'Category', key: 'category', sortable: true, width: '120px' },
+  { title: 'Status', key: 'status', sortable: true, width: '100px' },
   { title: 'Actions', key: 'actions', sortable: false, width: '100px' }
 ]
 
@@ -192,8 +195,10 @@ onMounted(async () => {
 
 async function loadData() {
   try {
+    const sort = sortBy.value[0]?.key || 'created_at'
+    const order = sortBy.value[0]?.order === 'asc' ? 'asc' : 'desc'
     const [productsRes, taxRatesRes] = await Promise.all([
-      get('/products'),
+      get(`/products?sort=${sort}&order=${order}`),
       get('/tax-rates')
     ])
     products.value = productsRes.data || []
@@ -201,6 +206,11 @@ async function loadData() {
   } catch (error) {
     console.error('Failed to load data:', error)
   }
+}
+
+function handleSort(sort) {
+  sortBy.value = sort
+  loadData()
 }
 
 async function saveProduct() {

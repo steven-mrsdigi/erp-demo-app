@@ -19,6 +19,8 @@
       :headers="headers"
       :items="customers"
       :loading="loading"
+      v-model:sort-by="sortBy"
+      @update:sort-by="handleSort"
       class="elevation-1 d-none d-md-block"
       density="comfortable"
     >
@@ -123,6 +125,7 @@ const customers = ref([])
 const showAddDialog = ref(false)
 const isEditing = ref(false)
 const editingCustomerId = ref(null)
+const sortBy = ref([{ key: 'name', order: 'asc' }])
 
 const newCustomer = ref({
   name: '',
@@ -133,22 +136,33 @@ const newCustomer = ref({
 })
 
 const headers = [
-  { title: 'Name', key: 'name' },
-  { title: 'Email', key: 'email' },
-  { title: 'Phone', key: 'phone' },
-  { title: 'Company', key: 'company' },
-  { title: 'Status', key: 'status', width: '100px' },
+  { title: 'Name', key: 'name', sortable: true },
+  { title: 'Email', key: 'email', sortable: true },
+  { title: 'Phone', key: 'phone', sortable: true },
+  { title: 'Company', key: 'company', sortable: true },
+  { title: 'Status', key: 'status', sortable: true, width: '100px' },
   { title: 'Actions', key: 'actions', sortable: false, width: '100px' }
 ]
 
 onMounted(async () => {
+  await loadData()
+})
+
+async function loadData() {
   try {
-    const response = await get('/customers')
+    const sort = sortBy.value[0]?.key || 'name'
+    const order = sortBy.value[0]?.order === 'asc' ? 'asc' : 'desc'
+    const response = await get(`/customers?sort=${sort}&order=${order}`)
     customers.value = response.data || []
   } catch (error) {
     console.error('Failed to load customers:', error)
   }
-})
+}
+
+function handleSort(sort) {
+  sortBy.value = sort
+  loadData()
+}
 
 async function saveCustomer() {
   try {
@@ -160,8 +174,7 @@ async function saveCustomer() {
       await post('/customers', newCustomer.value)
     }
     showAddDialog.value = false
-    const response = await get('/customers')
-    customers.value = response.data || []
+    await loadData()
     newCustomer.value = { name: '', email: '', phone: '', company: '', address: '' }
     isEditing.value = false
     editingCustomerId.value = null

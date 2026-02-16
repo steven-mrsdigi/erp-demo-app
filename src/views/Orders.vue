@@ -19,6 +19,8 @@
       :headers="headers"
       :items="orders"
       :loading="loading"
+      v-model:sort-by="sortBy"
+      @update:sort-by="handleSort"
       class="elevation-1 d-none d-md-block"
       density="comfortable"
     >
@@ -257,6 +259,7 @@ const products = ref([])
 const showDialog = ref(false)
 const isEditing = ref(false)
 const editingOrderId = ref(null)
+const sortBy = ref([{ key: 'order_date', order: 'desc' }])
 
 const newOrder = ref({
   customer_id: null,
@@ -280,19 +283,25 @@ const paymentMethods = [
 ]
 
 const headers = [
-  { title: 'Order #', key: 'order_number', width: '150px' },
-  { title: 'Customer', key: 'customer_name' },
-  { title: 'Total', key: 'total_amount', width: '100px' },
-  { title: 'Status', key: 'status', width: '120px' },
-  { title: 'Payment', key: 'payment_status', width: '100px' },
-  { title: 'Date', key: 'order_date', width: '120px' },
+  { title: 'Order #', key: 'order_number', sortable: true, width: '150px' },
+  { title: 'Customer', key: 'customer_name', sortable: true },
+  { title: 'Total', key: 'total_amount', sortable: true, width: '100px' },
+  { title: 'Status', key: 'status', sortable: true, width: '120px' },
+  { title: 'Payment', key: 'payment_status', sortable: true, width: '100px' },
+  { title: 'Date', key: 'order_date', sortable: true, width: '120px' },
   { title: 'Actions', key: 'actions', sortable: false, width: '100px' }
 ]
 
 onMounted(async () => {
+  await loadData()
+})
+
+async function loadData() {
   try {
+    const sort = sortBy.value[0]?.key || 'order_date'
+    const order = sortBy.value[0]?.order === 'asc' ? 'asc' : 'desc'
     const [ordersRes, customersRes, productsRes] = await Promise.all([
-      get('/orders'),
+      get(`/orders?sort=${sort}&order=${order}`),
       get('/customers'),
       get('/products')
     ])
@@ -302,7 +311,12 @@ onMounted(async () => {
   } catch (error) {
     console.error('Failed to load data:', error)
   }
-})
+}
+
+function handleSort(sort) {
+  sortBy.value = sort
+  loadData()
+}
 
 function addItem() {
   newOrder.value.items.push({ product_id: null, quantity: 1, unit_price: 0, total_price: 0 })
@@ -450,8 +464,7 @@ async function saveOrder() {
     }
     
     showDialog.value = false
-    const response = await get('/orders')
-    orders.value = response.data || []
+    await loadData()
     newOrder.value = { customer_id: null, items: [{ product_id: null, quantity: 1, unit_price: 0, total_price: 0 }], notes: '' }
     isEditing.value = false
     editingOrderId.value = null
@@ -505,11 +518,8 @@ async function processPayment() {
     
     showPaymentDialog.value = false
     
-    // Refresh orders list
-    const response = await get('/orders')
-    orders.value = response.data || []
-    
-    // Refresh products to see updated quantities
+    // Refresh orders and products
+    await loadData()
     const productsRes = await get('/products')
     products.value = productsRes.data || []
     

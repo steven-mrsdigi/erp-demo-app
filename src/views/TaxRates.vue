@@ -18,6 +18,8 @@
       :headers="headers"
       :items="taxRates"
       :loading="loading"
+      v-model:sort-by="sortBy"
+      @update:sort-by="handleSort"
       class="elevation-1 d-none d-md-block"
       density="comfortable"
     >
@@ -116,6 +118,7 @@ const showDialog = ref(false)
 const isEditing = ref(false)
 const editingId = ref(null)
 const loading = ref(false)
+const sortBy = ref([{ key: 'name', order: 'asc' }])
 
 const form = ref({
   name: '',
@@ -125,10 +128,10 @@ const form = ref({
 })
 
 const headers = [
-  { title: 'Name', key: 'name' },
-  { title: 'Rate', key: 'rate', width: '100px' },
-  { title: 'Description', key: 'description' },
-  { title: 'Default', key: 'is_default', width: '100px' },
+  { title: 'Name', key: 'name', sortable: true },
+  { title: 'Rate', key: 'rate', sortable: true, width: '100px' },
+  { title: 'Description', key: 'description', sortable: true },
+  { title: 'Default', key: 'is_default', sortable: true, width: '100px' },
   { title: 'Actions', key: 'actions', sortable: false, width: '100px' }
 ]
 
@@ -139,13 +142,20 @@ onMounted(async () => {
 async function loadData() {
   loading.value = true
   try {
-    const response = await get('/tax-rates')
+    const sort = sortBy.value[0]?.key || 'name'
+    const order = sortBy.value[0]?.order === 'asc' ? 'asc' : 'desc'
+    const response = await get(`/tax-rates?sort=${sort}&order=${order}`)
     taxRates.value = response.data || []
   } catch (error) {
     console.error('Failed to load tax rates:', error)
   } finally {
     loading.value = false
   }
+}
+
+function handleSort(sort) {
+  sortBy.value = sort
+  loadData()
 }
 
 function openAddDialog() {
