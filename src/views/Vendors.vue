@@ -18,6 +18,8 @@
       :headers="headers"
       :items="vendors"
       :loading="loading"
+      v-model:sort-by="sortBy"
+      @update:sort-by="handleSort"
       class="elevation-1 d-none d-md-block"
       density="comfortable"
     >
@@ -118,6 +120,7 @@ const showAddDialog = ref(false)
 const editingVendor = ref(null)
 const saving = ref(false)
 const loading = ref(true)
+const sortBy = ref([{ key: 'name', order: 'asc' }])
 
 const form = ref({
   name: '',
@@ -131,11 +134,11 @@ const form = ref({
 })
 
 const headers = [
-  { title: 'Name', key: 'name' },
-  { title: 'Contact', key: 'contact_person' },
-  { title: 'Email', key: 'email' },
-  { title: 'Phone', key: 'phone' },
-  { title: 'Payment Terms', key: 'payment_terms' },
+  { title: 'Name', key: 'name', sortable: true },
+  { title: 'Contact', key: 'contact_person', sortable: true },
+  { title: 'Email', key: 'email', sortable: true },
+  { title: 'Phone', key: 'phone', sortable: true },
+  { title: 'Payment Terms', key: 'payment_terms', sortable: true },
   { title: 'Actions', key: 'actions', sortable: false, width: '100px' }
 ]
 
@@ -145,9 +148,16 @@ onMounted(async () => {
 
 async function loadVendors() {
   loading.value = true
-  const res = await get('/vendors')
+  const sort = sortBy.value[0]?.key || 'name'
+  const order = sortBy.value[0]?.order === 'asc' ? 'asc' : 'desc'
+  const res = await get(`/vendors?sort=${sort}&order=${order}`)
   vendors.value = res.data || []
   loading.value = false
+}
+
+function handleSort(sort) {
+  sortBy.value = sort
+  loadVendors()
 }
 
 function editVendor(vendor) {
