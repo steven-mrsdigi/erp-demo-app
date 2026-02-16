@@ -439,7 +439,14 @@ function openPaymentDialog(order) {
 
 async function processPayment() {
   try {
-    await patch('/orders', {
+    console.log('Processing payment:', {
+      order_id: paymentOrder.value.id,
+      payment_method: paymentData.value.method,
+      paid_amount: parseFloat(paymentData.value.amount),
+      payment_reference: paymentData.value.reference
+    })
+    
+    const result = await patch('/orders', {
       action: 'pay',
       order_id: paymentOrder.value.id,
       payment_method: paymentData.value.method,
@@ -447,13 +454,20 @@ async function processPayment() {
       payment_reference: paymentData.value.reference
     })
     
+    console.log('Payment result:', result)
+    
     showPaymentDialog.value = false
     
     // Refresh orders list
     const response = await get('/orders')
     orders.value = response.data || []
     
+    // Refresh products to see updated quantities
+    const productsRes = await get('/products')
+    products.value = productsRes.data || []
+    
     paymentOrder.value = null
+    alert('Payment processed successfully!')
   } catch (error) {
     console.error('Failed to process payment:', error)
     alert('Payment failed: ' + (error.message || 'Unknown error'))
