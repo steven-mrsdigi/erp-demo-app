@@ -39,6 +39,13 @@
       </template>
       
       <template v-slot:item.actions="{ item }">
+        <v-btn 
+          v-if="item.payment_status !== 'paid'" 
+          icon size="small" variant="text" color="success" 
+          @click="openPaymentDialog(item)"
+        >
+          <v-icon>mdi-cash-register</v-icon>
+        </v-btn>
         <v-btn icon size="small" variant="text" color="primary" @click="editItem(item)">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
@@ -72,6 +79,14 @@
               <div class="text-caption text-grey mt-1">{{ order.order_date }}</div>
             </v-card-text>
             <v-card-actions>
+              <v-btn 
+                v-if="order.payment_status !== 'paid'"
+                size="small" variant="text" color="success" 
+                @click="openPaymentDialog(order)"
+              >
+                <v-icon size="small" class="mr-1">mdi-cash-register</v-icon>
+                Pay
+              </v-btn>
               <v-btn size="small" variant="text" color="primary" @click="editItem(order)">
                 <v-icon size="small" class="mr-1">mdi-pencil</v-icon>
                 Edit
@@ -90,6 +105,53 @@
     <v-alert v-if="!loading && orders.length === 0" type="info" class="mt-4">
       No orders found. Click "Create Order" to create one.
     </v-alert>
+
+    <!-- Payment Dialog -->
+    <v-dialog v-model="showPaymentDialog" max-width="500" :fullscreen="isMobile">
+      <v-card>
+        <v-card-title class="text-h6">
+          Process Payment
+        </v-card-title>
+        <v-card-text>
+          <div class="text-subtitle-1 mb-4">
+            Order: {{ paymentOrder?.order_number }}
+          </div>
+          <div class="text-h5 mb-4 text-primary">
+            Total: ${{ paymentOrder?.total_amount }}
+          </div>
+          
+          <v-select
+            v-model="paymentData.method"
+            :items="paymentMethods"
+            item-title="label"
+            item-value="value"
+            label="Payment Method"
+            required
+            density="comfortable"
+          ></v-select>
+          
+          <v-text-field
+            v-model="paymentData.amount"
+            label="Amount Paid"
+            type="number"
+            prefix="$"
+            required
+            density="comfortable"
+          ></v-text-field>
+          
+          <v-text-field
+            v-model="paymentData.reference"
+            label="Reference Number (Optional)"
+            density="comfortable"
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions class="pa-4">
+          <v-spacer></v-spacer>
+          <v-btn text @click="showPaymentDialog = false">Cancel</v-btn>
+          <v-btn color="success" @click="processPayment">Confirm Payment</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- Order Dialog (Create/Edit) -->
     <v-dialog v-model="showDialog" max-width="800" :fullscreen="isMobile">
@@ -198,6 +260,22 @@ const newOrder = ref({
   customer_id: null,
   items: [{ product_id: null, quantity: 1, unit_price: 0, total_price: 0 }]
 })
+
+// Payment dialog data
+const showPaymentDialog = ref(false)
+const paymentOrder = ref(null)
+const paymentData = ref({
+  method: 'cash',
+  amount: 0,
+  reference: ''
+})
+
+const paymentMethods = [
+  { label: 'Cash', value: 'cash' },
+  { label: 'Credit Card', value: 'credit_card' },
+  { label: 'Bank Transfer', value: 'bank_transfer' },
+  { label: 'Check', value: 'check' }
+]
 
 const headers = [
   { title: 'Order #', key: 'order_number', width: '150px' },
@@ -347,5 +425,38 @@ function getStatusColor(status) {
 
 function deleteItem(item) {
   console.log('Delete:', item)
+}
+
+function openPaymentDialog(order) {
+  paymentOrder.value = order
+  paymentData.value = {
+    method: 'cash',
+    amount: order.total_amount || 0,
+    reference: ''
+  }
+  showPaymentDialog.value = true
+}
+
+async function processPayment() {
+  try {
+    await patch('/orders', {
+      action: 'pay',
+      order_id: paymentOrder.value.id,
+      payment_method: paymentData.value.method,
+      paid_amount: parseFloat(paymentData.value.amount),
+      payment_reference: paymentData.value.reference
+    })
+    
+    showPaymentDialog.value = false
+    
+    // Refresh orders list
+    const response = await get('/orders')
+    orders.value = response.data || []
+    
+    paymentOrder.value = null
+  } catch (error) {
+    console.error('Failed to process payment:', error)
+    alert('Payment failed: ' + (error.message || 'Unknown error'))
+  }
 }
 </script>
