@@ -28,9 +28,12 @@
       </template>
       
       <template v-slot:item.stock_quantity="{ item }">
-        <v-chip :color="item.stock_quantity < 20 ? 'error' : 'success'" size="small">
-          {{ item.stock_quantity }}
-        </v-chip>
+        <div class="d-flex flex-column">
+          <v-chip :color="(item.onhand_qty ?? item.stock_quantity) < 20 ? 'error' : 'success'" size="small" class="mb-1">
+            On Hand: {{ item.onhand_qty ?? item.stock_quantity }}
+          </v-chip>
+          <span class="text-caption">Available: {{ item.available_qty ?? item.stock_quantity }}</span>
+        </div>
       </template>
       
       <template v-slot:item.status="{ item }">
@@ -66,9 +69,14 @@
             <v-card-text class="py-2">
               <div class="d-flex justify-space-between align-center">
                 <span class="text-h6 font-weight-bold">${{ product.price }}</span>
-                <v-chip size="small" :color="product.stock_quantity < 20 ? 'error' : 'success'">
-                  Stock: {{ product.stock_quantity }}
-                </v-chip>
+                <div class="text-right">
+                  <v-chip size="small" :color="(product.onhand_qty ?? product.stock_quantity) < 20 ? 'error' : 'success'">
+                    On Hand: {{ product.onhand_qty ?? product.stock_quantity }}
+                  </v-chip>
+                  <div class="text-caption mt-1">
+                    Avail: {{ product.available_qty ?? product.stock_quantity }}
+                  </div>
+                </div>
               </div>
               <div class="text-caption text-grey mt-1">{{ product.category }}</div>
             </v-card-text>
