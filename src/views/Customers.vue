@@ -6,7 +6,7 @@
       <v-btn 
         color="primary" 
         :size="isMobile ? 'small' : 'default'"
-        @click="showAddDialog = true"
+        @click="openAddDialog"
         prepend-icon="mdi-plus"
       >
         <span class="d-none d-sm-inline">Add Customer</span>
@@ -82,11 +82,11 @@
       No customers found. Click "Add Customer" to create one.
     </v-alert>
 
-    <!-- Add Customer Dialog -->
+    <!-- Add/Edit Customer Dialog -->
     <v-dialog v-model="showAddDialog" max-width="600" :fullscreen="isMobile">
       <v-card>
         <v-card-title class="text-h6">
-          Add Customer
+          {{ isEditing ? 'Edit Customer' : 'Add Customer' }}
           <v-spacer></v-spacer>
           <v-btn icon @click="showAddDialog = false" class="d-md-none">
             <v-icon>mdi-close</v-icon>
@@ -102,7 +102,7 @@
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
           <v-btn text @click="showAddDialog = false">Cancel</v-btn>
-          <v-btn color="primary" @click="saveCustomer">Save</v-btn>
+          <v-btn color="primary" @click="saveCustomer">{{ isEditing ? 'Update' : 'Save' }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -114,13 +114,15 @@ import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useDisplay } from 'vuetify'
 
-const { get, post, loading } = useApi()
+const { get, post, patch, loading } = useApi()
 const { mdAndUp } = useDisplay()
 
 const isMobile = computed(() => !mdAndUp.value)
 
 const customers = ref([])
 const showAddDialog = ref(false)
+const isEditing = ref(false)
+const editingCustomerId = ref(null)
 
 const newCustomer = ref({
   name: '',
@@ -150,18 +152,42 @@ onMounted(async () => {
 
 async function saveCustomer() {
   try {
-    await post('/customers', newCustomer.value)
+    if (isEditing.value) {
+      // Update existing customer
+      await patch('/customers', { id: editingCustomerId.value, ...newCustomer.value })
+    } else {
+      // Create new customer
+      await post('/customers', newCustomer.value)
+    }
     showAddDialog.value = false
     const response = await get('/customers')
     customers.value = response.data || []
     newCustomer.value = { name: '', email: '', phone: '', company: '', address: '' }
+    isEditing.value = false
+    editingCustomerId.value = null
   } catch (error) {
     console.error('Failed to save customer:', error)
   }
 }
 
+function openAddDialog() {
+  isEditing.value = false
+  editingCustomerId.value = null
+  newCustomer.value = { name: '', email: '', phone: '', company: '', address: '' }
+  showAddDialog.value = true
+}
+
 function editItem(item) {
-  console.log('Edit:', item)
+  isEditing.value = true
+  editingCustomerId.value = item.id
+  newCustomer.value = {
+    name: item.name || '',
+    email: item.email || '',
+    phone: item.phone || '',
+    company: item.company || '',
+    address: item.address || ''
+  }
+  showAddDialog.value = true
 }
 
 function deleteItem(item) {
