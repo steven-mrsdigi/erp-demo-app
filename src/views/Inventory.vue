@@ -72,13 +72,15 @@
       <v-list class="d-md-none">
         <v-list-item v-for="item in stockData" :key="item.id">
           <v-list-item-title>{{ item.name }}</v-list-item-title>
-          <v-list-item-subtitle>{{ item.sku }}</v-list-item-subtitle>
+          <v-list-item-subtitle>
+            {{ item.sku }} | On Hand: {{ item.stock_quantity }} | Available: {{ item.available_qty }}
+          </v-list-item-subtitle>
           <template v-slot:append>
             <v-chip 
-              :color="item.stock_quantity < 10 ? 'error' : 'success'"
+              :color="item.available_qty < 10 ? 'error' : 'success'"
               size="small"
             >
-              {{ item.stock_quantity }}
+              {{ item.available_qty }}
             </v-chip>
           </template>
         </v-list-item>
@@ -213,9 +215,9 @@ const movementTypes = [
 const stockHeaders = [
   { title: 'Product', key: 'name' },
   { title: 'SKU', key: 'sku' },
-  { title: 'Current Stock', key: 'stock_quantity' },
-  { title: 'Total In', key: 'total_in' },
-  { title: 'Total Out', key: 'total_out' }
+  { title: 'On Hand', key: 'stock_quantity' },
+  { title: 'Allocated', key: 'allocated_qty' },
+  { title: 'Available', key: 'available_qty' }
 ]
 
 const movementHeaders = [
