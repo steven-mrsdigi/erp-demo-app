@@ -20,6 +20,9 @@
       
       <v-spacer></v-spacer>
       
+      <!-- Language & Theme Toggle -->
+      <LanguageThemeToggle v-if="!isMobile" />
+      
       <!-- 桌面端：导航按钮 -->
       <template v-if="!isMobile">
         <v-btn 
@@ -31,7 +34,7 @@
           :prepend-icon="item.icon"
           size="small"
         >
-          {{ item.title }}
+          {{ $t('nav.' + item.title.toLowerCase().replace(' ', '')) }}
         </v-btn>
       </template>
     </v-app-bar>
@@ -44,7 +47,7 @@
       temporary
     >
       <v-list>
-        <v-list-subheader>Menu</v-list-subheader>
+        <v-list-subheader>{{ $t('common.menu') }}</v-list-subheader>
         <v-list-item 
           v-for="item in menuItems" 
           :key="item.path"
@@ -52,7 +55,24 @@
           :prepend-icon="item.icon"
           @click="drawer = false"
         >
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
+          <v-list-item-title>{{ $t('nav.' + item.title.toLowerCase().replace(' ', '')) }}</v-list-item-title>
+        </v-list-item>
+        <v-divider class="my-2"></v-divider>
+        <v-list-subheader>{{ $t('language.title') }}</v-list-subheader>
+        <v-list-item
+          v-for="lang in languages"
+          :key="lang.code"
+          @click="changeLanguage(lang.code); drawer = false"
+          :active="currentLocale === lang.code"
+        >
+          <v-list-item-title>{{ lang.name }}</v-list-item-title>
+        </v-list-item>
+        <v-divider class="my-2"></v-divider>
+        <v-list-item @click="toggleTheme">
+          <template v-slot:prepend>
+            <v-icon>{{ isDark ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
+          </template>
+          <v-list-item-title>{{ isDark ? $t('theme.light') : $t('theme.dark') }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -95,13 +115,27 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { useTheme } from 'vuetify'
+import LanguageThemeToggle from '@/components/LanguageThemeToggle.vue'
 
 const route = useRoute()
+const { locale } = useI18n()
+const theme = useTheme()
 const drawer = ref(false)
 const bottomNav = ref(0)
 const windowWidth = ref(window.innerWidth)
 
 const isMobile = computed(() => windowWidth.value < 960)
+const currentLocale = computed(() => locale.value)
+const isDark = computed(() => theme.global.current.value.dark)
+
+const languages = [
+  { code: 'en', name: 'English' },
+  { code: 'zh-CN', name: '简体中文' },
+  { code: 'zh-TW', name: '繁體中文' },
+  { code: 'fr', name: 'Français' },
+]
 
 const updateWidth = () => {
   windowWidth.value = window.innerWidth
@@ -114,6 +148,17 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', updateWidth)
 })
+
+function changeLanguage(code) {
+  locale.value = code
+  localStorage.setItem('erp-language', code)
+}
+
+function toggleTheme() {
+  const newTheme = isDark.value ? 'light' : 'dark'
+  theme.global.name.value = newTheme
+  localStorage.setItem('erp-theme', newTheme)
+}
 
 // 所有菜单项
 const menuItems = [
