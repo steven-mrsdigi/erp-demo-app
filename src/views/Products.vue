@@ -178,7 +178,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useDisplay } from 'vuetify'
 
-const { get, post, patch, del, loading } = useApi()
+const { get, post, patch, delete: del, loading } = useApi()
 const { mdAndUp } = useDisplay()
 
 const isMobile = computed(() => !mdAndUp.value)
