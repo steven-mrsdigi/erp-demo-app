@@ -30,7 +30,11 @@
     "unpaid": "Unpaid",
     "noData": "No data found",
     "confirmDelete": "Confirm Delete",
-    "more": "More"
+    "more": "More",
+    "menu": "Menu"
+  },
+  "language": {
+    "title": "Language"
   },
   "nav": {
     "dashboard": "Dashboard",

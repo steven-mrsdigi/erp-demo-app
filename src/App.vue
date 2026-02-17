@@ -34,7 +34,7 @@
           :prepend-icon="item.icon"
           size="small"
         >
-          {{ $t('nav.' + item.title.toLowerCase().replace(' ', '')) }}
+          {{ $t('nav.' + item.key) }}
         </v-btn>
       </template>
     </v-app-bar>
@@ -55,7 +55,7 @@
           :prepend-icon="item.icon"
           @click="drawer = false"
         >
-          <v-list-item-title>{{ $t('nav.' + item.title.toLowerCase().replace(' ', '')) }}</v-list-item-title>
+          <v-list-item-title>{{ $t('nav.' + item.key) }}</v-list-item-title>
         </v-list-item>
         <v-divider class="my-2"></v-divider>
         <v-list-subheader>{{ $t('language.title') }}</v-list-subheader>
@@ -162,22 +162,22 @@ function toggleTheme() {
 
 // 所有菜单项
 const menuItems = [
-  { title: 'Dashboard', path: '/', icon: 'mdi-view-dashboard' },
-  { title: 'Products', path: '/products', icon: 'mdi-package' },
-  { title: 'Customers', path: '/customers', icon: 'mdi-account-group' },
-  { title: 'Orders', path: '/orders', icon: 'mdi-cart' },
-  { title: 'Vendors', path: '/vendors', icon: 'mdi-store' },
-  { title: 'Inventory', path: '/inventory', icon: 'mdi-warehouse' },
-  { title: 'Tax Rates', path: '/tax-rates', icon: 'mdi-percent' },
-  { title: 'Reports', path: '/reports', icon: 'mdi-chart-bar' },
+  { title: 'Dashboard', key: 'dashboard', path: '/', icon: 'mdi-view-dashboard' },
+  { title: 'Products', key: 'products', path: '/products', icon: 'mdi-package' },
+  { title: 'Customers', key: 'customers', path: '/customers', icon: 'mdi-account-group' },
+  { title: 'Orders', key: 'orders', path: '/orders', icon: 'mdi-cart' },
+  { title: 'Vendors', key: 'vendors', path: '/vendors', icon: 'mdi-store' },
+  { title: 'Inventory', key: 'inventory', path: '/inventory', icon: 'mdi-warehouse' },
+  { title: 'Tax Rates', key: 'taxRates', path: '/tax-rates', icon: 'mdi-percent' },
+  { title: 'Reports', key: 'reports', path: '/reports', icon: 'mdi-chart-bar' },
 ]
 
 // 手机端底部导航只显示前4个主要菜单
 const mainMenuItems = [
-  { title: 'Dashboard', path: '/', icon: 'mdi-view-dashboard' },
-  { title: 'Products', path: '/products', icon: 'mdi-package' },
-  { title: 'Orders', path: '/orders', icon: 'mdi-cart' },
-  { title: 'Reports', path: '/reports', icon: 'mdi-chart-bar' },
+  { title: 'Dashboard', key: 'dashboard', path: '/', icon: 'mdi-view-dashboard' },
+  { title: 'Products', key: 'products', path: '/products', icon: 'mdi-package' },
+  { title: 'Orders', key: 'orders', path: '/orders', icon: 'mdi-cart' },
+  { title: 'Reports', key: 'reports', path: '/reports', icon: 'mdi-chart-bar' },
 ]
 
 // 同步底部导航与当前路由

@@ -30,7 +30,11 @@
     "unpaid": "未付款",
     "noData": "没有数据",
     "confirmDelete": "确认删除",
-    "more": "更多"
+    "more": "更多",
+    "menu": "菜单"
+  },
+  "language": {
+    "title": "语言"
   },
   "nav": {
     "dashboard": "仪表盘",

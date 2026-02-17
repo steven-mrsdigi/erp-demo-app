@@ -31,7 +31,11 @@ export default {
     unpaid: 'Non payé',
     noData: 'Aucune donnée trouvée',
     confirmDelete: 'Confirmer la suppression',
-    more: 'Plus'
+    more: 'Plus',
+    menu: 'Menu'
+  },
+  language: {
+    title: 'Langue'
   },
   nav: {
     dashboard: 'Tableau de bord',
