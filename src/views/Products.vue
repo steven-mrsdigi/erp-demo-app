@@ -2,7 +2,7 @@
   <div>
     <!-- 页面标题 -->
     <div class="d-flex align-center justify-space-between mb-4">
-      <h1 class="text-h5 text-sm-h4">Products</h1>
+      <h1 class="text-h5 text-sm-h4">{{ $t('products.title') }}</h1>
       <v-btn 
         color="primary" 
         size="small"
@@ -10,8 +10,8 @@
         @click="openAddDialog"
         prepend-icon="mdi-plus"
       >
-        <span class="d-none d-sm-inline">Add Product</span>
-        <span class="d-sm-none">Add</span>
+        <span class="d-none d-sm-inline">{{ $t('products.addProduct') }}</span>
+        <span class="d-sm-none">{{ $t('common.add') }}</span>
       </v-btn>
     </div>
 
@@ -32,9 +32,9 @@
       <template v-slot:item.stock_quantity="{ item }">
         <div class="d-flex flex-column">
           <v-chip :color="(item.onhand_qty ?? item.stock_quantity) < 20 ? 'error' : 'success'" size="small" class="mb-1">
-            On Hand: {{ item.onhand_qty ?? item.stock_quantity }}
+            {{ $t('products.onHand') }}: {{ item.onhand_qty ?? item.stock_quantity }}
           </v-chip>
-          <span class="text-caption">Available: {{ item.available_qty ?? item.stock_quantity }}</span>
+          <span class="text-caption">{{ $t('products.available') }}: {{ item.available_qty ?? item.stock_quantity }}</span>
         </div>
       </template>
       
@@ -73,10 +73,10 @@
                 <span class="text-h6 font-weight-bold">${{ product.price }}</span>
                 <div class="text-right">
                   <v-chip size="small" :color="(product.onhand_qty ?? product.stock_quantity) < 20 ? 'error' : 'success'">
-                    On Hand: {{ product.onhand_qty ?? product.stock_quantity }}
+                    {{ $t('products.onHand') }}: {{ product.onhand_qty ?? product.stock_quantity }}
                   </v-chip>
                   <div class="text-caption mt-1">
-                    Avail: {{ product.available_qty ?? product.stock_quantity }}
+                    {{ $t('products.available') }}: {{ product.available_qty ?? product.stock_quantity }}
                   </div>
                 </div>
               </div>
@@ -85,11 +85,11 @@
             <v-card-actions>
               <v-btn size="small" variant="text" @click="editItem(product)">
                 <v-icon size="small" class="mr-1">mdi-pencil</v-icon>
-                Edit
+                {{ $t('common.edit') }}
               </v-btn>
               <v-btn size="small" variant="text" color="error" @click="deleteItem(product)">
                 <v-icon size="small" class="mr-1">mdi-delete</v-icon>
-                Delete
+                {{ $t('common.delete') }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -99,26 +99,26 @@
 
     <!-- 空状态 -->
     <v-alert v-if="!loading && products.length === 0" type="info" class="mt-4">
-      No products found. Click "Add Product" to create one.
+      {{ $t('common.noData') }}
     </v-alert>
 
     <!-- Add Product Dialog -->
     <v-dialog v-model="showAddDialog" max-width="600" :fullscreen="isMobile">
       <v-card>
         <v-card-title class="text-h6">
-          {{ isEditing ? 'Edit Product' : 'Add Product' }}
+          {{ isEditing ? $t('products.editProduct') : $t('products.addProduct') }}
           <v-spacer></v-spacer>
           <v-btn icon @click="showAddDialog = false" class="d-md-none">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <v-text-field v-model="newProduct.name" label="Product Name" required density="comfortable"></v-text-field>
+          <v-text-field v-model="newProduct.name" :label="$t('products.productName')" required density="comfortable"></v-text-field>
           <v-text-field v-model="newProduct.sku" label="SKU" required density="comfortable"></v-text-field>
-          <v-textarea v-model="newProduct.description" label="Description" rows="2" density="comfortable"></v-textarea>
+          <v-textarea v-model="newProduct.description" :label="$t('common.description')" rows="2" density="comfortable"></v-textarea>
           <v-row>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="newProduct.price" label="Price" type="number" prefix="$" density="comfortable"></v-text-field>
+              <v-text-field v-model="newProduct.price" :label="$t('common.price')" type="number" prefix="$" density="comfortable"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
               <v-select
@@ -126,7 +126,7 @@
                 :items="taxRates"
                 item-title="name"
                 item-value="id"
-                label="Tax Rate"
+                :label="$t('products.taxRate')"
                 density="comfortable"
                 clearable
               ></v-select>
@@ -134,17 +134,17 @@
           </v-row>
           <v-row>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="newProduct.stock_quantity" label="Stock Quantity" type="number" density="comfortable"></v-text-field>
+              <v-text-field v-model="newProduct.stock_quantity" :label="$t('common.quantity')" type="number" density="comfortable"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-select v-model="newProduct.category" label="Category" :items="categories" density="comfortable"></v-select>
+              <v-select v-model="newProduct.category" :label="$t('products.category')" :items="categories" density="comfortable"></v-select>
             </v-col>
           </v-row>
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
-          <v-btn text @click="showAddDialog = false">Cancel</v-btn>
-          <v-btn color="primary" @click="saveProduct">{{ isEditing ? 'Update' : 'Save' }}</v-btn>
+          <v-btn text @click="showAddDialog = false">{{ $t('common.cancel') }}</v-btn>
+          <v-btn color="primary" @click="saveProduct">{{ isEditing ? $t('common.update') : $t('common.save') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -154,10 +154,10 @@
       <v-card>
         <v-card-title class="text-h6">
           <v-icon color="error" class="mr-2">mdi-alert</v-icon>
-          Confirm Delete
+          {{ $t('common.confirmDelete') }}
         </v-card-title>
         <v-card-text>
-          Are you sure you want to delete product "<strong>{{ productToDelete?.name }}</strong>"?<br>
+          {{ $t('products.deleteConfirm') }} "<strong>{{ productToDelete?.name }}</strong>"?<br>
           <span class="text-caption text-grey">SKU: {{ productToDelete?.sku }}</span>
           <v-alert v-if="deleteError" type="error" class="mt-3" density="compact">
             {{ deleteError }}
@@ -165,8 +165,8 @@
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
-          <v-btn text @click="showDeleteDialog = false">Cancel</v-btn>
-          <v-btn color="error" @click="confirmDelete" :loading="deleting">Delete</v-btn>
+          <v-btn text @click="showDeleteDialog = false">{{ $t('common.cancel') }}</v-btn>
+          <v-btn color="error" @click="confirmDelete" :loading="deleting">{{ $t('common.delete') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -205,15 +205,19 @@ const newProduct = ref({
   category: ''
 })
 
-const headers = [
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+const headers = computed(() => [
   { title: 'SKU', key: 'sku', sortable: true, width: '120px' },
-  { title: 'Name', key: 'name', sortable: true },
-  { title: 'Price', key: 'price', sortable: true, width: '100px' },
-  { title: 'Stock', key: 'stock_quantity', sortable: true, width: '100px' },
-  { title: 'Category', key: 'category', sortable: true, width: '120px' },
-  { title: 'Status', key: 'status', sortable: true, width: '100px' },
-  { title: 'Actions', key: 'actions', sortable: false, width: '100px' }
-]
+  { title: t('common.name'), key: 'name', sortable: true },
+  { title: t('common.price'), key: 'price', sortable: true, width: '100px' },
+  { title: t('products.stock'), key: 'stock_quantity', sortable: true, width: '100px' },
+  { title: t('products.category'), key: 'category', sortable: true, width: '120px' },
+  { title: t('common.status'), key: 'status', sortable: true, width: '100px' },
+  { title: t('common.actions'), key: 'actions', sortable: false, width: '100px' }
+])
 
 onMounted(async () => {
   await loadData()

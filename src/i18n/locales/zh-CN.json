@@ -16,10 +16,20 @@
     "actions": "操作",
     "status": "状态",
     "name": "名称",
+    "description": "描述",
     "price": "价格",
     "quantity": "数量",
     "total": "总计",
-    "date": "日期"
+    "date": "日期",
+    "active": "启用",
+    "inactive": "停用",
+    "pending": "待处理",
+    "completed": "已完成",
+    "cancelled": "已取消",
+    "paid": "已付款",
+    "unpaid": "未付款",
+    "noData": "没有数据",
+    "confirmDelete": "确认删除"
   },
   "nav": {
     "dashboard": "仪表盘",
@@ -38,7 +48,68 @@
     "sku": "SKU",
     "category": "分类",
     "stock": "库存",
-    "taxRate": "税率"
+    "onHand": "现有",
+    "available": "可用",
+    "taxRate": "税率",
+    "productName": "产品名称",
+    "deleteWarning": "无法删除已用于订单的产品",
+    "deleteConfirm": "确定要删除此产品吗？"
+  },
+  "customers": {
+    "title": "客户管理",
+    "addCustomer": "添加客户",
+    "editCustomer": "编辑客户",
+    "email": "邮箱",
+    "phone": "电话",
+    "company": "公司",
+    "address": "地址",
+    "contact": "联系人"
+  },
+  "orders": {
+    "title": "订单管理",
+    "createOrder": "创建订单",
+    "editOrder": "编辑订单",
+    "orderNumber": "订单编号",
+    "customer": "客户",
+    "orderDate": "订单日期",
+    "paymentStatus": "付款状态",
+    "subtotal": "小计",
+    "tax": "税",
+    "grandTotal": "总计",
+    "items": "项目",
+    "addItem": "添加项目",
+    "processPayment": "处理付款",
+    "paymentMethod": "付款方式",
+    "amountPaid": "付款金额",
+    "reference": "参考编号",
+    "confirmPayment": "确认付款",
+    "selectCustomer": "选择客户",
+    "orderItems": "订单项目"
+  },
+  "inventory": {
+    "title": "库存管理",
+    "recordMovement": "记录变动",
+    "totalProducts": "产品总数",
+    "lowStock": "库存不足",
+    "totalIn": "总入库",
+    "totalOut": "总出库",
+    "currentStock": "当前库存",
+    "recentMovements": "最近变动"
+  },
+  "taxRates": {
+    "title": "税率管理",
+    "addTaxRate": "添加税率",
+    "editTaxRate": "编辑税率",
+    "rate": "税率",
+    "isDefault": "默认",
+    "setAsDefault": "设为默认税率"
+  },
+  "vendors": {
+    "title": "供应商管理",
+    "addVendor": "添加供应商",
+    "editVendor": "编辑供应商",
+    "contactPerson": "联系人",
+    "paymentTerms": "付款条件"
   },
   "theme": {
     "light": "亮色模式",

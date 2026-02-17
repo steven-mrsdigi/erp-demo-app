@@ -16,10 +16,20 @@
     "actions": "操作",
     "status": "狀態",
     "name": "名稱",
+    "description": "描述",
     "price": "價格",
     "quantity": "數量",
     "total": "總計",
-    "date": "日期"
+    "date": "日期",
+    "active": "啟用",
+    "inactive": "停用",
+    "pending": "待處理",
+    "completed": "已完成",
+    "cancelled": "已取消",
+    "paid": "已付款",
+    "unpaid": "未付款",
+    "noData": "沒有數據",
+    "confirmDelete": "確認刪除"
   },
   "nav": {
     "dashboard": "儀表盤",
@@ -38,7 +48,68 @@
     "sku": "SKU",
     "category": "分類",
     "stock": "庫存",
-    "taxRate": "稅率"
+    "onHand": "現有",
+    "available": "可用",
+    "taxRate": "稅率",
+    "productName": "產品名稱",
+    "deleteWarning": "無法刪除已用於訂單的產品",
+    "deleteConfirm": "確定要刪除此產品嗎？"
+  },
+  "customers": {
+    "title": "客戶管理",
+    "addCustomer": "添加客戶",
+    "editCustomer": "編輯客戶",
+    "email": "電郵",
+    "phone": "電話",
+    "company": "公司",
+    "address": "地址",
+    "contact": "聯絡人"
+  },
+  "orders": {
+    "title": "訂單管理",
+    "createOrder": "創建訂單",
+    "editOrder": "編輯訂單",
+    "orderNumber": "訂單編號",
+    "customer": "客戶",
+    "orderDate": "訂單日期",
+    "paymentStatus": "付款狀態",
+    "subtotal": "小計",
+    "tax": "稅",
+    "grandTotal": "總計",
+    "items": "項目",
+    "addItem": "添加項目",
+    "processPayment": "處理付款",
+    "paymentMethod": "付款方式",
+    "amountPaid": "付款金額",
+    "reference": "參考編號",
+    "confirmPayment": "確認付款",
+    "selectCustomer": "選擇客戶",
+    "orderItems": "訂單項目"
+  },
+  "inventory": {
+    "title": "庫存管理",
+    "recordMovement": "記錄變動",
+    "totalProducts": "產品總數",
+    "lowStock": "庫存不足",
+    "totalIn": "總入庫",
+    "totalOut": "總出庫",
+    "currentStock": "當前庫存",
+    "recentMovements": "最近變動"
+  },
+  "taxRates": {
+    "title": "稅率管理",
+    "addTaxRate": "添加稅率",
+    "editTaxRate": "編輯稅率",
+    "rate": "稅率",
+    "isDefault": "默認",
+    "setAsDefault": "設為默認稅率"
+  },
+  "vendors": {
+    "title": "供應商管理",
+    "addVendor": "添加供應商",
+    "editVendor": "編輯供應商",
+    "contactPerson": "聯絡人",
+    "paymentTerms": "付款條件"
   },
   "theme": {
     "light": "亮色模式",
@@ -46,7 +117,7 @@
   },
   "language": {
     "english": "English",
-    "chineseS": "簡體中文",
+    "chineseS": "简体中文",
     "chineseT": "繁體中文",
     "french": "Français"
   }
