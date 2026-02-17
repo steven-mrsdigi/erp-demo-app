@@ -159,7 +159,7 @@
     <v-dialog v-model="showDialog" max-width="800" :fullscreen="isMobile">
       <v-card>
         <v-card-title class="text-h6 d-flex align-center">
-          {{ isEditing ? '{{ $t("orders.editOrder") }}' : '{{ $t("orders.createOrder") }}' }}
+          {{ isEditing ? $t('orders.editOrder') : $t('orders.createOrder') }}
           <v-spacer></v-spacer>
           <v-btn icon @click="showDialog = false" class="d-md-none">
             <v-icon>mdi-close</v-icon>
@@ -236,7 +236,7 @@
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
           <v-btn text @click="showDialog = false">{{ $t("common.cancel") }}</v-btn>
-          <v-btn color="primary" @click="saveOrder">{{ isEditing ? 'Update Order' : '{{ $t("orders.createOrder") }}' }}</v-btn>
+          <v-btn color="primary" @click="saveOrder">{{ isEditing ? $t('common.update') : $t('common.save') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
