@@ -30,7 +30,8 @@ export default {
     paid: 'Payé',
     unpaid: 'Non payé',
     noData: 'Aucune donnée trouvée',
-    confirmDelete: 'Confirmer la suppression'
+    confirmDelete: 'Confirmer la suppression',
+    more: 'Plus'
   },
   nav: {
     dashboard: 'Tableau de bord',

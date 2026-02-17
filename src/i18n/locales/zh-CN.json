@@ -29,7 +29,8 @@
     "paid": "已付款",
     "unpaid": "未付款",
     "noData": "没有数据",
-    "confirmDelete": "确认删除"
+    "confirmDelete": "确认删除",
+    "more": "更多"
   },
   "nav": {
     "dashboard": "仪表盘",

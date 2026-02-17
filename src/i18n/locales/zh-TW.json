@@ -29,7 +29,8 @@
     "paid": "已付款",
     "unpaid": "未付款",
     "noData": "沒有數據",
-    "confirmDelete": "確認刪除"
+    "confirmDelete": "確認刪除",
+    "more": "更多"
   },
   "nav": {
     "dashboard": "儀表盤",

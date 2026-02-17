@@ -29,7 +29,8 @@
     "paid": "Paid",
     "unpaid": "Unpaid",
     "noData": "No data found",
-    "confirmDelete": "Confirm Delete"
+    "confirmDelete": "Confirm Delete",
+    "more": "More"
   },
   "nav": {
     "dashboard": "Dashboard",

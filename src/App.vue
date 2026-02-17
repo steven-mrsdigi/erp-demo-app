@@ -93,20 +93,20 @@
       grow
       density="comfortable"
     >
-      <v-btn 
-        v-for="(item, index) in mainMenuItems" 
+      <v-btn
+        v-for="(item, index) in mainMenuItems"
         :key="item.path"
         :value="index"
         :to="item.path"
         size="small"
       >
         <v-icon size="20">{{ item.icon }}</v-icon>
-        <span class="text-caption mt-1">{{ item.title }}</span>
+        <span class="text-caption mt-1">{{ $t('nav.' + item.title.toLowerCase().replace(' ', '')) }}</span>
       </v-btn>
       <!-- 更多菜单按钮 -->
       <v-btn size="small" @click="drawer = !drawer">
         <v-icon size="20">mdi-dots-horizontal</v-icon>
-        <span class="text-caption mt-1">More</span>
+        <span class="text-caption mt-1">{{ $t('common.more') }}</span>
       </v-btn>
     </v-bottom-navigation>
   </v-app>
