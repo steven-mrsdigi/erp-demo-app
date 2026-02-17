@@ -2,7 +2,6 @@
 export default {
   common: {
     save: 'Enregistrer',
-    menu: 'Menu',
     cancel: 'Annuler',
     delete: 'Supprimer',
     edit: 'Modifier',
@@ -13,9 +12,6 @@ export default {
     close: 'Fermer',
     yes: 'Oui',
     no: 'Non',
-    back: 'Retour',
-    next: 'Suivant',
-    submit: 'Soumettre',
     create: 'Créer',
     update: 'Mettre à jour',
     actions: 'Actions',
@@ -33,6 +29,8 @@ export default {
     cancelled: 'Annulé',
     paid: 'Payé',
     unpaid: 'Non payé',
+    noData: 'Aucune donnée trouvée',
+    confirmDelete: 'Confirmer la suppression'
   },
   nav: {
     dashboard: 'Tableau de bord',
@@ -42,8 +40,7 @@ export default {
     vendors: 'Fournisseurs',
     inventory: 'Inventaire',
     taxRates: 'Taux de taxe',
-    reports: 'Rapports',
-    settings: 'Paramètres',
+    reports: 'Rapports'
   },
   products: {
     title: 'Produits',
@@ -53,12 +50,11 @@ export default {
     category: 'Catégorie',
     stock: 'Stock',
     onHand: 'En stock',
-    allocated: 'Alloué',
     available: 'Disponible',
     taxRate: 'Taux de taxe',
-    confirmDelete: 'Confirmer la suppression',
-    deleteWarning: 'Êtes-vous sûr de vouloir supprimer le produit',
-    deleteError: 'Impossible de supprimer un produit utilisé dans des commandes',
+    productName: 'Nom du produit',
+    deleteWarning: 'Impossible de supprimer un produit utilisé dans des commandes',
+    deleteConfirm: 'Voulez-vous vraiment supprimer ce produit ?'
   },
   customers: {
     title: 'Clients',
@@ -68,6 +64,7 @@ export default {
     phone: 'Téléphone',
     company: 'Entreprise',
     address: 'Adresse',
+    contact: 'Contact'
   },
   orders: {
     title: 'Commandes',
@@ -87,7 +84,8 @@ export default {
     amountPaid: 'Montant payé',
     reference: 'Référence',
     confirmPayment: 'Confirmer le paiement',
-    paymentSuccess: 'Paiement effectué avec succès!',
+    selectCustomer: 'Sélectionner un client',
+    orderItems: 'Articles de la commande'
   },
   inventory: {
     title: 'Inventaire',
@@ -97,7 +95,7 @@ export default {
     totalIn: 'Total entrées',
     totalOut: 'Total sorties',
     currentStock: 'Niveaux de stock actuels',
-    recentMovements: 'Mouvements récents',
+    recentMovements: 'Mouvements récents'
   },
   taxRates: {
     title: 'Taux de taxe',
@@ -105,17 +103,23 @@ export default {
     editTaxRate: 'Modifier le taux',
     rate: 'Taux',
     isDefault: 'Par défaut',
-    setAsDefault: 'Définir comme taux par défaut',
+    setAsDefault: 'Définir comme taux par défaut'
+  },
+  vendors: {
+    title: 'Fournisseurs',
+    addVendor: 'Ajouter un fournisseur',
+    editVendor: 'Modifier le fournisseur',
+    contactPerson: 'Personne de contact',
+    paymentTerms: 'Conditions de paiement'
   },
   theme: {
-    light: 'Mode clair',
-    dark: 'Mode sombre',
+    light: 'Clair',
+    dark: 'Sombre'
   },
   language: {
-    title: 'Langue',
     english: 'English',
-    chineseSimplified: '简体中文',
-    chineseTraditional: '繁體中文',
-    french: 'Français',
-  },
+    chineseS: '简体中文',
+    chineseT: '繁體中文',
+    french: 'Français'
+  }
 }

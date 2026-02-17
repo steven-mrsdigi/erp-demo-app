@@ -9,7 +9,7 @@
         prepend-icon="mdi-plus"
       >
         <span class="d-none d-sm-inline">Add Tax Rate</span>
-        <span class="d-sm-none">Add</span>
+        <span class="d-sm-none">{{ $t("common.add") }}</span>
       </v-btn>
     </div>
 
@@ -95,7 +95,7 @@
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
-          <v-btn text @click="showDialog = false">Cancel</v-btn>
+          <v-btn text @click="showDialog = false">{{ $t("common.cancel") }}</v-btn>
           <v-btn color="primary" @click="saveTaxRate">{{ isEditing ? 'Update' : 'Save' }}</v-btn>
         </v-card-actions>
       </v-card>

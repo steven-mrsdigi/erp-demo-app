@@ -2,15 +2,15 @@
   <div>
     <!-- 页面标题 -->
     <div class="d-flex align-center justify-space-between mb-4">
-      <h1 class="text-h5 text-sm-h4">Orders</h1>
+      <h1 class="text-h5 text-sm-h4">{{ $t('orders.title') }}</h1>
       <v-btn 
         color="primary" 
         :size="isMobile ? 'small' : 'default'"
         @click="openCreateDialog"
         prepend-icon="mdi-plus"
       >
-        <span class="d-none d-sm-inline">Create Order</span>
-        <span class="d-sm-none">Create</span>
+        <span class="d-none d-sm-inline">{{ $t('orders.createOrder') }}</span>
+        <span class="d-sm-none">{{ $t('common.create') }}</span>
       </v-btn>
     </div>
 
@@ -105,7 +105,7 @@
 
     <!-- 空状态 -->
     <v-alert v-if="!loading && orders.length === 0" type="info" class="mt-4">
-      No orders found. Click "Create Order" to create one.
+      No orders found. Click "{{ $t("orders.createOrder") }}" to create one.
     </v-alert>
 
     <!-- Payment Dialog -->
@@ -149,7 +149,7 @@
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
-          <v-btn text @click="showPaymentDialog = false">Cancel</v-btn>
+          <v-btn text @click="showPaymentDialog = false">{{ $t("common.cancel") }}</v-btn>
           <v-btn color="success" @click="processPayment">Confirm Payment</v-btn>
         </v-card-actions>
       </v-card>
@@ -159,7 +159,7 @@
     <v-dialog v-model="showDialog" max-width="800" :fullscreen="isMobile">
       <v-card>
         <v-card-title class="text-h6 d-flex align-center">
-          {{ isEditing ? 'Edit Order' : 'Create Order' }}
+          {{ isEditing ? '{{ $t("orders.editOrder") }}' : '{{ $t("orders.createOrder") }}' }}
           <v-spacer></v-spacer>
           <v-btn icon @click="showDialog = false" class="d-md-none">
             <v-icon>mdi-close</v-icon>
@@ -235,8 +235,8 @@
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
-          <v-btn text @click="showDialog = false">Cancel</v-btn>
-          <v-btn color="primary" @click="saveOrder">{{ isEditing ? 'Update Order' : 'Create Order' }}</v-btn>
+          <v-btn text @click="showDialog = false">{{ $t("common.cancel") }}</v-btn>
+          <v-btn color="primary" @click="saveOrder">{{ isEditing ? 'Update Order' : '{{ $t("orders.createOrder") }}' }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
