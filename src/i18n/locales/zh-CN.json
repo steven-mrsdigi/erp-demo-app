@@ -1,0 +1,53 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "search": "搜索",
+    "loading": "加载中...",
+    "confirm": "确认",
+    "close": "关闭",
+    "yes": "是",
+    "no": "否",
+    "create": "创建",
+    "update": "更新",
+    "actions": "操作",
+    "status": "状态",
+    "name": "名称",
+    "price": "价格",
+    "quantity": "数量",
+    "total": "总计",
+    "date": "日期"
+  },
+  "nav": {
+    "dashboard": "仪表盘",
+    "products": "产品",
+    "customers": "客户",
+    "orders": "订单",
+    "vendors": "供应商",
+    "inventory": "库存",
+    "taxRates": "税率",
+    "reports": "报表"
+  },
+  "products": {
+    "title": "产品管理",
+    "addProduct": "添加产品",
+    "editProduct": "编辑产品",
+    "sku": "SKU",
+    "category": "分类",
+    "stock": "库存",
+    "taxRate": "税率"
+  },
+  "theme": {
+    "light": "亮色模式",
+    "dark": "暗黑模式"
+  },
+  "language": {
+    "english": "English",
+    "chineseS": "简体中文",
+    "chineseT": "繁體中文",
+    "french": "Français"
+  }
+}

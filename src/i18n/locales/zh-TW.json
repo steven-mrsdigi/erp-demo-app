@@ -1,0 +1,53 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "刪除",
+    "edit": "編輯",
+    "add": "添加",
+    "search": "搜索",
+    "loading": "加載中...",
+    "confirm": "確認",
+    "close": "關閉",
+    "yes": "是",
+    "no": "否",
+    "create": "創建",
+    "update": "更新",
+    "actions": "操作",
+    "status": "狀態",
+    "name": "名稱",
+    "price": "價格",
+    "quantity": "數量",
+    "total": "總計",
+    "date": "日期"
+  },
+  "nav": {
+    "dashboard": "儀表盤",
+    "products": "產品",
+    "customers": "客戶",
+    "orders": "訂單",
+    "vendors": "供應商",
+    "inventory": "庫存",
+    "taxRates": "稅率",
+    "reports": "報表"
+  },
+  "products": {
+    "title": "產品管理",
+    "addProduct": "添加產品",
+    "editProduct": "編輯產品",
+    "sku": "SKU",
+    "category": "分類",
+    "stock": "庫存",
+    "taxRate": "稅率"
+  },
+  "theme": {
+    "light": "亮色模式",
+    "dark": "暗黑模式"
+  },
+  "language": {
+    "english": "English",
+    "chineseS": "簡體中文",
+    "chineseT": "繁體中文",
+    "french": "Français"
+  }
+}
