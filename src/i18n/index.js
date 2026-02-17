@@ -12,7 +12,7 @@ const messages = {
 }
 
 // Get saved language from localStorage or default to 'en'
-const savedLang = localStorage.getItem('app-language') || 'en'
+const savedLang = localStorage.getItem('erp-language') || 'en'
 
 const i18n = createI18n({
   legacy: false,

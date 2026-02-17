@@ -101,7 +101,7 @@
         size="small"
       >
         <v-icon size="20">{{ item.icon }}</v-icon>
-        <span class="text-caption mt-1">{{ $t('nav.' + item.title.toLowerCase().replace(' ', '')) }}</span>
+        <span class="text-caption mt-1">{{ $t('nav.' + item.key) }}</span>
       </v-btn>
       <!-- 更多菜单按钮 -->
       <v-btn size="small" @click="drawer = !drawer">
