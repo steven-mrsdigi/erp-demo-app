@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h1 class="text-h5 text-sm-h4 mb-4">Inventory</h1>
+    <h1 class="text-h5 text-sm-h4 mb-4">{{ $t('inventory.title') }}</h1>
 
     <!-- 库存统计 -->
     <v-row class="mb-4">
       <v-col cols="6" md="3">
         <v-card color="primary" dark>
           <v-card-text class="pa-3">
-            <div class="text-caption">Total Products</div>
+            <div class="text-caption">{{ $t('inventory.totalProducts') }}</div>
             <div class="text-h5 font-weight-bold">{{ stockData.length }}</div>
           </v-card-text>
         </v-card>
@@ -15,7 +15,7 @@
       <v-col cols="6" md="3">
         <v-card color="warning" dark>
           <v-card-text class="pa-3">
-            <div class="text-caption">Low Stock</div>
+            <div class="text-caption">{{ $t('inventory.lowStock') }}</div>
             <div class="text-h5 font-weight-bold">{{ lowStockCount }}</div>
           </v-card-text>
         </v-card>
@@ -23,7 +23,7 @@
       <v-col cols="6" md="3">
         <v-card color="success" dark>
           <v-card-text class="pa-3">
-            <div class="text-caption">Total In</div>
+            <div class="text-caption">{{ $t('inventory.totalIn') }}</div>
             <div class="text-h5 font-weight-bold">{{ totalIn }}</div>
           </v-card-text>
         </v-card>
@@ -31,7 +31,7 @@
       <v-col cols="6" md="3">
         <v-card color="error" dark>
           <v-card-text class="pa-3">
-            <div class="text-caption">Total Out</div>
+            <div class="text-caption">{{ $t('inventory.totalOut') }}</div>
             <div class="text-h5 font-weight-bold">{{ totalOut }}</div>
           </v-card-text>
         </v-card>
@@ -45,12 +45,12 @@
       @click="showMovementDialog = true"
       prepend-icon="mdi-swap-horizontal"
     >
-      Record Movement
+      {{ $t('inventory.recordMovement') }}
     </v-btn>
 
     <!-- 当前库存（桌面端表格） -->
     <v-card class="mb-4">
-      <v-card-title class="text-subtitle-1">Current Stock Levels</v-card-title>
+      <v-card-title class="text-subtitle-1">{{ $t('inventory.currentStock') }}</v-card-title>
       <v-data-table
         :headers="stockHeaders"
         :items="stockData"
@@ -75,7 +75,7 @@
         <v-list-item v-for="item in stockData" :key="item.id">
           <v-list-item-title>{{ item.name }}</v-list-item-title>
           <v-list-item-subtitle>
-            {{ item.sku }} | On Hand: {{ item.stock_quantity }} | Available: {{ item.available_qty }}
+            {{ item.sku }} | {{ $t('inventory.onHand') }}: {{ item.stock_quantity }} | {{ $t('inventory.available') }}: {{ item.available_qty }}
           </v-list-item-subtitle>
           <template v-slot:append>
             <v-chip 
@@ -91,7 +91,7 @@
 
     <!-- 最近库存变动 -->
     <v-card>
-      <v-card-title class="text-subtitle-1">Recent Movements</v-card-title>
+      <v-card-title class="text-subtitle-1">{{ $t('inventory.recentMovements') }}</v-card-title>
       <v-data-table
         :headers="movementHeaders"
         :items="movements"
@@ -121,7 +121,7 @@
             >
               {{ item.type.toUpperCase() }}
             </v-chip>
-            {{ item.quantity }} units
+            {{ item.quantity }} {{ $t('common.units') }}
           </v-list-item-subtitle>
         </v-list-item>
       </v-list>
@@ -130,14 +130,14 @@
     <!-- Record Movement Dialog -->
     <v-dialog v-model="showMovementDialog" max-width="500" :fullscreen="isMobile">
       <v-card>
-        <v-card-title class="text-h6">Record Inventory Movement</v-card-title>
+        <v-card-title class="text-h6">{{ $t('inventory.recordMovementTitle') }}</v-card-title>
         <v-card-text>
           <v-select
             v-model="movementForm.product_id"
             :items="products"
             item-title="name"
             item-value="id"
-            label="Select Product"
+            :label="$t('inventory.selectProduct')"
             required
             density="comfortable"
           ></v-select>
@@ -145,14 +145,14 @@
           <v-select
             v-model="movementForm.type"
             :items="movementTypes"
-            label="Movement Type"
+            :label="$t('inventory.movementType')"
             required
             density="comfortable"
           ></v-select>
           
           <v-text-field
             v-model="movementForm.quantity"
-            label="Quantity"
+            :label="$t('common.quantity')"
             type="number"
             required
             density="comfortable"
@@ -160,7 +160,7 @@
           
           <v-text-field
             v-model="movementForm.unit_cost"
-            label="Unit Cost"
+            :label="$t('inventory.unitCost')"
             type="number"
             prefix="$"
             density="comfortable"
@@ -168,7 +168,7 @@
           
           <v-textarea
             v-model="movementForm.notes"
-            label="Notes"
+            :label="$t('common.notes')"
             rows="2"
             density="comfortable"
           ></v-textarea>
@@ -187,9 +187,11 @@
 import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useDisplay } from 'vuetify'
+import { useI18n } from 'vue-i18n'
 
 const { get, post, loading: apiLoading } = useApi()
 const { mdAndUp } = useDisplay()
+const { t } = useI18n()
 
 const isMobile = computed(() => !mdAndUp.value)
 
@@ -210,26 +212,26 @@ const movementForm = ref({
 })
 
 const movementTypes = [
-  { title: 'Stock In (Purchase)', value: 'in' },
-  { title: 'Stock Out (Sale)', value: 'out' },
-  { title: 'Adjustment', value: 'adjustment' }
+  { title: t('inventory.stockIn'), value: 'in' },
+  { title: t('inventory.stockOut'), value: 'out' },
+  { title: t('inventory.adjustment'), value: 'adjustment' }
 ]
 
-const stockHeaders = [
-  { title: 'Product', key: 'name', sortable: true },
+const stockHeaders = computed(() => [
+  { title: t('common.product'), key: 'name', sortable: true },
   { title: 'SKU', key: 'sku', sortable: true },
-  { title: 'On Hand', key: 'stock_quantity', sortable: true },
-  { title: 'Allocated', key: 'allocated_qty', sortable: true },
-  { title: 'Available', key: 'available_qty', sortable: true }
-]
+  { title: t('inventory.onHand'), key: 'stock_quantity', sortable: true },
+  { title: t('inventory.allocated'), key: 'allocated_qty', sortable: true },
+  { title: t('inventory.available'), key: 'available_qty', sortable: true }
+])
 
-const movementHeaders = [
-  { title: 'Date', key: 'created_at' },
-  { title: 'Product', key: 'product_name' },
-  { title: 'Type', key: 'type' },
-  { title: 'Qty', key: 'quantity' },
-  { title: 'Notes', key: 'notes' }
-]
+const movementHeaders = computed(() => [
+  { title: t('common.date'), key: 'created_at' },
+  { title: t('common.product'), key: 'product_name' },
+  { title: t('inventory.type'), key: 'type' },
+  { title: t('common.qty'), key: 'quantity' },
+  { title: t('common.notes'), key: 'notes' }
+])
 
 const lowStockCount = computed(() => 
   stockData.value.filter(item => item.stock_quantity < 10).length

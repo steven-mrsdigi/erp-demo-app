@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h1 class="text-h5 text-sm-h4 mb-4">Dashboard</h1>
+    <h1 class="text-h5 text-sm-h4 mb-4">{{ $t('dashboard.title') }}</h1>
     
     <!-- 统计卡片 -->
     <v-row>
       <v-col cols="6" md="3">
         <v-card color="primary" dark class="h-100">
           <v-card-text class="pa-3 pa-sm-4">
-            <div class="text-caption text-sm-body-2 opacity-80">Products</div>
+            <div class="text-caption text-sm-body-2 opacity-80">{{ $t('dashboard.products') }}</div>
             <div class="text-h5 text-sm-h3 font-weight-bold">{{ stats.products }}</div>
           </v-card-text>
         </v-card>
@@ -16,7 +16,7 @@
       <v-col cols="6" md="3">
         <v-card color="success" dark class="h-100">
           <v-card-text class="pa-3 pa-sm-4">
-            <div class="text-caption text-sm-body-2 opacity-80">Customers</div>
+            <div class="text-caption text-sm-body-2 opacity-80">{{ $t('dashboard.customers') }}</div>
             <div class="text-h5 text-sm-h3 font-weight-bold">{{ stats.customers }}</div>
           </v-card-text>
         </v-card>
@@ -25,7 +25,7 @@
       <v-col cols="6" md="3">
         <v-card color="info" dark class="h-100">
           <v-card-text class="pa-3 pa-sm-4">
-            <div class="text-caption text-sm-body-2 opacity-80">Orders</div>
+            <div class="text-caption text-sm-body-2 opacity-80">{{ $t('dashboard.orders') }}</div>
             <div class="text-h5 text-sm-h3 font-weight-bold">{{ stats.orders }}</div>
           </v-card-text>
         </v-card>
@@ -34,7 +34,7 @@
       <v-col cols="6" md="3">
         <v-card color="warning" dark class="h-100">
           <v-card-text class="pa-3 pa-sm-4">
-            <div class="text-caption text-sm-body-2 opacity-80">Revenue</div>
+            <div class="text-caption text-sm-body-2 opacity-80">{{ $t('dashboard.revenue') }}</div>
             <div class="text-h5 text-sm-h3 font-weight-bold">${{ stats.revenue }}</div>
           </v-card-text>
         </v-card>
@@ -48,7 +48,7 @@
         <v-card>
           <v-card-title class="text-subtitle-1 text-sm-h6 py-3">
             <v-icon class="mr-2" size="small">mdi-cart</v-icon>
-            Recent Orders
+            {{ $t('dashboard.recentOrders') }}
           </v-card-title>
           <v-card-text class="pa-0">
             <!-- 桌面端列表 -->
@@ -91,7 +91,7 @@
         <v-card>
           <v-card-title class="text-subtitle-1 text-sm-h6 py-3">
             <v-icon class="mr-2" size="small" color="error">mdi-alert</v-icon>
-            Low Stock Alert
+            {{ $t('dashboard.lowStockAlert') }}
           </v-card-title>
           <v-card-text class="pa-0">
             <!-- 桌面端列表 -->
@@ -101,7 +101,7 @@
                 <v-list-item-subtitle class="text-caption">SKU: {{ product.sku }}</v-list-item-subtitle>
                 <template v-slot:append>
                   <v-chip color="error" size="x-small" class="text-caption">
-                    {{ product.stock_quantity }} left
+                    {{ product.stock_quantity }} {{ $t('common.left') }}
                   </v-chip>
                 </template>
               </v-list-item>
@@ -115,7 +115,7 @@
                   <div class="d-flex justify-space-between align-center">
                     <span class="font-weight-medium text-body-2">{{ product.name }}</span>
                     <v-chip color="error" size="x-small">
-                      {{ product.stock_quantity }} left
+                      {{ product.stock_quantity }} {{ $t('common.left') }}
                     </v-chip>
                   </div>
                   <div class="text-caption text-grey">SKU: {{ product.sku }}</div>
@@ -124,7 +124,7 @@
             </div>
             
             <v-alert v-if="lowStockProducts.length === 0" type="success" class="ma-2" density="compact">
-              All products have sufficient stock!
+              {{ $t('dashboard.allProductsSufficientStock') }}
             </v-alert>
           </v-card-text>
         </v-card>

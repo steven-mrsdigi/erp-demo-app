@@ -31,10 +31,41 @@
     "noData": "没有数据",
     "confirmDelete": "确认删除",
     "more": "更多",
-    "menu": "菜单"
+    "menu": "菜单",
+    "noCompany": "无公司",
+    "noEmail": "无邮箱",
+    "noPhone": "无电话",
+    "noContact": "无联系人",
+    "noDescription": "无描述",
+    "uncategorized": "未分类",
+    "selectReport": "选择报表",
+    "recordMovement": "记录变动",
+    "processPayment": "处理付款",
+    "paymentMethod": "付款方式",
+    "amountPaid": "付款金额",
+    "reference": "参考编号",
+    "confirmPayment": "确认付款",
+    "paymentProcessed": "付款处理成功！",
+    "paymentFailed": "付款失败",
+    "failedToDelete": "删除失败",
+    "failedToSave": "保存失败",
+    "failedToLoad": "加载失败",
+    "unknownError": "未知错误",
+    "units": "单位",
+    "sold": "已售",
+    "orders": "订单",
+    "products": "产品",
+    "left": "剩余",
+    "product": "产品",
+    "qty": "数量",
+    "notes": "备注"
   },
   "language": {
-    "title": "语言"
+    "title": "语言",
+    "english": "English",
+    "chineseS": "简体中文",
+    "chineseT": "繁體中文",
+    "french": "Français"
   },
   "nav": {
     "dashboard": "仪表盘",
@@ -45,6 +76,16 @@
     "inventory": "库存",
     "taxRates": "税率",
     "reports": "报表"
+  },
+  "dashboard": {
+    "title": "仪表盘",
+    "products": "产品",
+    "customers": "客户",
+    "orders": "订单",
+    "revenue": "收入",
+    "recentOrders": "最近订单",
+    "lowStockAlert": "库存不足警告",
+    "allProductsSufficientStock": "所有产品库存充足！"
   },
   "products": {
     "title": "产品管理",
@@ -68,7 +109,9 @@
     "phone": "电话",
     "company": "公司",
     "address": "地址",
-    "contact": "联系人"
+    "contact": "联系人",
+    "deleteConfirm": "确定要删除此客户吗？",
+    "noCustomers": "没有找到客户。点击\"添加客户\"创建一个。"
   },
   "orders": {
     "title": "订单管理",
@@ -89,7 +132,16 @@
     "reference": "参考编号",
     "confirmPayment": "确认付款",
     "selectCustomer": "选择客户",
-    "orderItems": "订单项目"
+    "orderItems": "订单项目",
+    "pay": "付款",
+    "noOrders": "没有找到订单。点击\"创建订单\"创建一个。",
+    "unknownCustomer": "未知客户",
+    "orderItemsTitle": "订单项目",
+    "addNewItem": "添加项目",
+    "product": "产品",
+    "qty": "数量",
+    "unitPrice": "单价",
+    "itemSubtotal": "小计"
   },
   "inventory": {
     "title": "库存管理",
@@ -99,7 +151,20 @@
     "totalIn": "总入库",
     "totalOut": "总出库",
     "currentStock": "当前库存",
-    "recentMovements": "最近变动"
+    "recentMovements": "最近变动",
+    "recordMovementTitle": "记录库存变动",
+    "selectProduct": "选择产品",
+    "movementType": "变动类型",
+    "unitCost": "单位成本",
+    "notes": "备注",
+    "stockIn": "入库（采购）",
+    "stockOut": "出库（销售）",
+    "adjustment": "调整",
+    "onHand": "现有",
+    "allocated": "已分配",
+    "available": "可用",
+    "type": "类型",
+    "noInventory": "没有库存数据"
   },
   "taxRates": {
     "title": "税率管理",
@@ -107,23 +172,68 @@
     "editTaxRate": "编辑税率",
     "rate": "税率",
     "isDefault": "默认",
-    "setAsDefault": "设为默认税率"
+    "setAsDefault": "设为默认税率",
+    "taxName": "税名",
+    "noTaxRates": "没有找到税率。点击\"添加税率\"创建一个。",
+    "deleteConfirm": "删除",
+    "default": "默认",
+    "no": "否"
   },
   "vendors": {
     "title": "供应商管理",
     "addVendor": "添加供应商",
     "editVendor": "编辑供应商",
     "contactPerson": "联系人",
-    "paymentTerms": "付款条件"
+    "paymentTerms": "付款条件",
+    "vendorName": "供应商名称",
+    "contact": "联系人",
+    "email": "邮箱",
+    "phone": "电话",
+    "address": "地址",
+    "taxId": "税号",
+    "notes": "备注",
+    "noVendors": "没有找到供应商。点击\"添加供应商\"创建一个。",
+    "noContact": "无联系人",
+    "na": "无",
+    "paymentTermsPlaceholder": "例如：30 天净付款"
+  },
+  "reports": {
+    "title": "报表",
+    "products": "产品",
+    "customers": "客户",
+    "selectReport": "选择报表",
+    "dashboardOverview": "仪表板概览",
+    "salesReport": "销售报表",
+    "inventoryValuation": "库存估值",
+    "topProducts": "热门产品",
+    "dailySales": "每日销售（最近 30 天）",
+    "inventoryByCategory": "按类别的库存估值",
+    "topSellingProducts": "热销产品（最近 30 天）",
+    "lowStockAlert": "库存不足警告",
+    "selectReportToView": "选择要查看的报表",
+    "date": "日期",
+    "orderCount": "订单数",
+    "totalSales": "销售额",
+    "category": "类别",
+    "productCount": "产品数",
+    "totalUnits": "总单位数",
+    "totalValue": "总价值",
+    "product": "产品",
+    "sku": "SKU",
+    "sold": "已售",
+    "revenue": "收入"
   },
   "theme": {
     "light": "亮色模式",
     "dark": "暗黑模式"
   },
-  "language": {
-    "english": "English",
-    "chineseS": "简体中文",
-    "chineseT": "繁體中文",
-    "french": "Français"
+  "paymentMethods": {
+    "cash": "现金",
+    "creditCard": "信用卡",
+    "bankTransfer": "银行转账",
+    "check": "支票"
+  },
+  "app": {
+    "title": "ERP 演示"
   }
 }

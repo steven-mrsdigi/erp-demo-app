@@ -2,14 +2,14 @@
   <div>
     <!-- 页面标题 -->
     <div class="d-flex align-center justify-space-between mb-4">
-      <h1 class="text-h5 text-sm-h4">Customers</h1>
-      <v-btn 
-        color="primary" 
+      <h1 class="text-h5 text-sm-h4">{{ $t('customers.title') }}</h1>
+      <v-btn
+        color="primary"
         :size="isMobile ? 'small' : 'default'"
         @click="openAddDialog"
         prepend-icon="mdi-plus"
       >
-        <span class="d-none d-sm-inline">Add Customer</span>
+        <span class="d-none d-sm-inline">{{ $t('customers.addCustomer') }}</span>
         <span class="d-sm-none">{{ $t("common.add") }}</span>
       </v-btn>
     </div>
@@ -52,26 +52,26 @@
               </v-chip>
             </v-card-title>
             <v-card-subtitle class="text-caption">
-              {{ customer.company || 'No Company' }}
+              {{ customer.company || $t('common.noCompany') }}
             </v-card-subtitle>
             <v-card-text class="py-2">
               <div class="d-flex align-center mb-1">
                 <v-icon size="small" class="mr-2">mdi-email</v-icon>
-                <span class="text-body-2">{{ customer.email || 'No email' }}</span>
+                <span class="text-body-2">{{ customer.email || $t('common.noEmail') }}</span>
               </div>
               <div class="d-flex align-center">
                 <v-icon size="small" class="mr-2">mdi-phone</v-icon>
-                <span class="text-body-2">{{ customer.phone || 'No phone' }}</span>
+                <span class="text-body-2">{{ customer.phone || $t('common.noPhone') }}</span>
               </div>
             </v-card-text>
             <v-card-actions>
               <v-btn size="small" variant="text" @click="editItem(customer)">
                 <v-icon size="small" class="mr-1">mdi-pencil</v-icon>
-                Edit
+                {{ $t('common.edit') }}
               </v-btn>
               <v-btn size="small" variant="text" color="error" @click="deleteItem(customer)">
                 <v-icon size="small" class="mr-1">mdi-delete</v-icon>
-                Delete
+                {{ $t('common.delete') }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -81,30 +81,30 @@
 
     <!-- 空状态 -->
     <v-alert v-if="!loading && customers.length === 0" type="info" class="mt-4">
-      No customers found. Click "Add Customer" to create one.
+      {{ $t('customers.noCustomers') }}
     </v-alert>
 
     <!-- Add/Edit Customer Dialog -->
     <v-dialog v-model="showAddDialog" max-width="600" :fullscreen="isMobile">
       <v-card>
         <v-card-title class="text-h6">
-          {{ isEditing ? 'Edit Customer' : 'Add Customer' }}
+          {{ isEditing ? $t('customers.editCustomer') : $t('customers.addCustomer') }}
           <v-spacer></v-spacer>
           <v-btn icon @click="showAddDialog = false" class="d-md-none">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <v-text-field v-model="newCustomer.name" label="Name" required density="comfortable"></v-text-field>
-          <v-text-field v-model="newCustomer.email" label="Email" type="email" density="comfortable"></v-text-field>
-          <v-text-field v-model="newCustomer.phone" label="Phone" density="comfortable"></v-text-field>
-          <v-text-field v-model="newCustomer.company" label="Company" density="comfortable"></v-text-field>
-          <v-textarea v-model="newCustomer.address" label="Address" rows="2" density="comfortable"></v-textarea>
+          <v-text-field v-model="newCustomer.name" :label="$t('common.name')" required density="comfortable"></v-text-field>
+          <v-text-field v-model="newCustomer.email" :label="$t('customers.email')" type="email" density="comfortable"></v-text-field>
+          <v-text-field v-model="newCustomer.phone" :label="$t('customers.phone')" density="comfortable"></v-text-field>
+          <v-text-field v-model="newCustomer.company" :label="$t('customers.company')" density="comfortable"></v-text-field>
+          <v-textarea v-model="newCustomer.address" :label="$t('customers.address')" rows="2" density="comfortable"></v-textarea>
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
           <v-btn text @click="showAddDialog = false">{{ $t("common.cancel") }}</v-btn>
-          <v-btn color="primary" @click="saveCustomer">{{ isEditing ? 'Update' : 'Save' }}</v-btn>
+          <v-btn color="primary" @click="saveCustomer">{{ isEditing ? $t('common.update') : $t('common.save') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -115,6 +115,9 @@
 import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useDisplay } from 'vuetify'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const { get, post, patch, loading } = useApi()
 const { mdAndUp } = useDisplay()
@@ -135,14 +138,14 @@ const newCustomer = ref({
   address: ''
 })
 
-const headers = [
-  { title: 'Name', key: 'name', sortable: true },
-  { title: 'Email', key: 'email', sortable: true },
-  { title: 'Phone', key: 'phone', sortable: true },
-  { title: 'Company', key: 'company', sortable: true },
-  { title: 'Status', key: 'status', sortable: true, width: '100px' },
-  { title: 'Actions', key: 'actions', sortable: false, width: '100px' }
-]
+const headers = computed(() => [
+  { title: t('common.name'), key: 'name', sortable: true },
+  { title: t('customers.email'), key: 'email', sortable: true },
+  { title: t('customers.phone'), key: 'phone', sortable: true },
+  { title: t('customers.company'), key: 'company', sortable: true },
+  { title: t('common.status'), key: 'status', sortable: true, width: '100px' },
+  { title: t('common.actions'), key: 'actions', sortable: false, width: '100px' }
+])
 
 onMounted(async () => {
   await loadData()

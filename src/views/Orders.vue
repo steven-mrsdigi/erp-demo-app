@@ -30,13 +30,13 @@
       
       <template v-slot:item.status="{ item }">
         <v-chip :color="getStatusColor(item.status)" size="small">
-          {{ item.status }}
+          {{ $t(`common.${item.status}`) }}
         </v-chip>
       </template>
       
       <template v-slot:item.payment_status="{ item }">
         <v-chip :color="item.payment_status === 'paid' ? 'success' : 'warning'" size="small">
-          {{ item.payment_status }}
+          {{ $t(`common.${item.payment_status}`) }}
         </v-chip>
       </template>
       
@@ -65,17 +65,17 @@
             <v-card-title class="text-subtitle-1 pb-1 d-flex justify-space-between">
               <span>{{ order.order_number }}</span>
               <v-chip size="x-small" :color="getStatusColor(order.status)">
-                {{ order.status }}
+                {{ $t(`common.${order.status}`) }}
               </v-chip>
             </v-card-title>
             <v-card-subtitle class="text-caption">
-              {{ order.customer_name || 'Unknown Customer' }}
+              {{ order.customer_name || $t('orders.unknownCustomer') }}
             </v-card-subtitle>
             <v-card-text class="py-2">
               <div class="d-flex justify-space-between align-center">
                 <span class="text-h6 font-weight-bold">${{ order.total_amount }}</span>
                 <v-chip size="small" :color="order.payment_status === 'paid' ? 'success' : 'warning'">
-                  {{ order.payment_status }}
+                  {{ $t(`common.${order.payment_status}`) }}
                 </v-chip>
               </div>
               <div class="text-caption text-grey mt-1">{{ order.order_date }}</div>
@@ -87,15 +87,15 @@
                 @click="openPaymentDialog(order)"
               >
                 <v-icon size="small" class="mr-1">mdi-cash-register</v-icon>
-                Pay
+                {{ $t('orders.pay') }}
               </v-btn>
               <v-btn size="small" variant="text" color="primary" @click="editItem(order)">
                 <v-icon size="small" class="mr-1">mdi-pencil</v-icon>
-                Edit
+                {{ $t('common.edit') }}
               </v-btn>
               <v-btn size="small" variant="text" color="error" @click="deleteItem(order)">
                 <v-icon size="small" class="mr-1">mdi-delete</v-icon>
-                Delete
+                {{ $t('common.delete') }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -105,21 +105,21 @@
 
     <!-- 空状态 -->
     <v-alert v-if="!loading && orders.length === 0" type="info" class="mt-4">
-      No orders found. Click "{{ $t("orders.createOrder") }}" to create one.
+      {{ $t('orders.noOrders') }}
     </v-alert>
 
     <!-- Payment Dialog -->
     <v-dialog v-model="showPaymentDialog" max-width="500" :fullscreen="isMobile">
       <v-card>
         <v-card-title class="text-h6">
-          Process Payment
+          {{ $t('orders.processPayment') }}
         </v-card-title>
         <v-card-text>
           <div class="text-subtitle-1 mb-4">
-            Order: {{ paymentOrder?.order_number }}
+            {{ $t('orders.orderNumber') }} {{ paymentOrder?.order_number }}
           </div>
           <div class="text-h5 mb-4 text-primary">
-            Total: ${{ paymentOrder?.total_amount }}
+            {{ $t('orders.grandTotal') }} ${{ paymentOrder?.total_amount }}
           </div>
           
           <v-select
@@ -127,14 +127,14 @@
             :items="paymentMethods"
             item-title="label"
             item-value="value"
-            label="Payment Method"
+            :label="$t('orders.paymentMethod')"
             required
             density="comfortable"
           ></v-select>
           
           <v-text-field
             v-model="paymentData.amount"
-            label="Amount Paid"
+            :label="$t('orders.amountPaid')"
             type="number"
             prefix="$"
             required
@@ -143,14 +143,14 @@
           
           <v-text-field
             v-model="paymentData.reference"
-            label="Reference Number (Optional)"
+            :label="$t('orders.reference')"
             density="comfortable"
           ></v-text-field>
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
           <v-btn text @click="showPaymentDialog = false">{{ $t("common.cancel") }}</v-btn>
-          <v-btn color="success" @click="processPayment">Confirm Payment</v-btn>
+          <v-btn color="success" @click="processPayment">{{ $t('orders.confirmPayment') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -171,14 +171,14 @@
             :items="customers"
             item-title="name"
             item-value="id"
-            label="Select Customer"
+            :label="$t('orders.selectCustomer')"
             required
             density="comfortable"
           ></v-select>
           
           <v-divider class="my-4"></v-divider>
           
-          <div class="text-subtitle-2 mb-2">Order Items</div>
+          <div class="text-subtitle-2 mb-2">{{ $t('orders.orderItemsTitle') }}</div>
           
           <div v-for="(item, index) in newOrder.items" :key="index" class="mb-4 pa-2 bg-grey-lighten-4 rounded">
             <div class="d-flex flex-column flex-sm-row gap-2">
@@ -187,7 +187,7 @@
                 :items="products"
                 item-title="name"
                 item-value="id"
-                label="Product"
+                :label="$t('orders.product')"
                 density="comfortable"
                 class="flex-grow-1"
                 @update:modelValue="updateItemPrice(item)"
@@ -195,7 +195,7 @@
               <div class="d-flex gap-2">
                 <v-text-field
                   v-model="item.quantity"
-                  label="Qty"
+                  :label="$t('orders.qty')"
                   type="number"
                   density="comfortable"
                   style="width: 80px"
@@ -203,7 +203,7 @@
                 ></v-text-field>
                 <v-text-field
                   v-model="item.unit_price"
-                  label="Price"
+                  :label="$t('orders.unitPrice')"
                   type="number"
                   prefix="$"
                   density="comfortable"
@@ -213,7 +213,7 @@
               </div>
             </div>
             <div class="d-flex justify-space-between align-center mt-2">
-              <span class="font-weight-bold">Subtotal: ${{ item.total_price }}</span>
+              <span class="font-weight-bold">{{ $t('orders.itemSubtotal') }} ${{ item.total_price }}</span>
               <v-btn icon size="small" color="error" variant="text" @click="removeItem(index)">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
@@ -222,15 +222,15 @@
           
           <v-btn text color="primary" @click="addItem" size="small">
             <v-icon size="small" class="mr-1">mdi-plus</v-icon>
-            Add Item
+            {{ $t('orders.addNewItem') }}
           </v-btn>
           
           <v-divider class="my-4"></v-divider>
           
           <div class="d-flex flex-column align-end">
-            <div class="text-body-1">Subtotal: ${{ calculateSubtotal() }}</div>
-            <div class="text-body-1">Tax ({{ calculateTotalTaxRate() }}%): ${{ calculateTax() }}</div>
-            <div class="text-h6 mt-2">Total: ${{ calculateGrandTotal() }}</div>
+            <div class="text-body-1">{{ $t('orders.subtotal') }} ${{ calculateSubtotal() }}</div>
+            <div class="text-body-1">{{ $t('orders.tax') }} ({{ calculateTotalTaxRate() }}%): ${{ calculateTax() }}</div>
+            <div class="text-h6 mt-2">{{ $t('orders.grandTotal') }} ${{ calculateGrandTotal() }}</div>
           </div>
         </v-card-text>
         <v-card-actions class="pa-4">
@@ -247,7 +247,9 @@
 import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useDisplay } from 'vuetify'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { get, post, patch, loading } = useApi()
 const { mdAndUp } = useDisplay()
 
@@ -275,22 +277,22 @@ const paymentData = ref({
   reference: ''
 })
 
-const paymentMethods = [
-  { label: 'Cash', value: 'cash' },
-  { label: 'Credit Card', value: 'credit_card' },
-  { label: 'Bank Transfer', value: 'bank_transfer' },
-  { label: 'Check', value: 'check' }
-]
+const paymentMethods = computed(() => [
+  { label: t('paymentMethods.cash'), value: 'cash' },
+  { label: t('paymentMethods.creditCard'), value: 'credit_card' },
+  { label: t('paymentMethods.bankTransfer'), value: 'bank_transfer' },
+  { label: t('paymentMethods.check'), value: 'check' }
+])
 
-const headers = [
-  { title: 'Order #', key: 'order_number', sortable: true, width: '150px' },
-  { title: 'Customer', key: 'customer_name', sortable: true },
-  { title: 'Total', key: 'total_amount', sortable: true, width: '100px' },
-  { title: 'Status', key: 'status', sortable: true, width: '120px' },
-  { title: 'Payment', key: 'payment_status', sortable: true, width: '100px' },
-  { title: 'Date', key: 'order_date', sortable: true, width: '120px' },
-  { title: 'Actions', key: 'actions', sortable: false, width: '100px' }
-]
+const headers = computed(() => [
+  { title: t('orders.orderNumber'), key: 'order_number', sortable: true, width: '150px' },
+  { title: t('orders.customer'), key: 'customer_name', sortable: true },
+  { title: t('orders.grandTotal'), key: 'total_amount', sortable: true, width: '100px' },
+  { title: t('common.status'), key: 'status', sortable: true, width: '120px' },
+  { title: t('orders.paymentStatus'), key: 'payment_status', sortable: true, width: '100px' },
+  { title: t('orders.orderDate'), key: 'order_date', sortable: true, width: '120px' },
+  { title: t('common.actions'), key: 'actions', sortable: false, width: '100px' }
+])
 
 onMounted(async () => {
   await loadData()
@@ -524,10 +526,10 @@ async function processPayment() {
     products.value = productsRes.data || []
     
     paymentOrder.value = null
-    alert('Payment processed successfully!')
+    alert(t('orders.paymentProcessed'))
   } catch (error) {
     console.error('Failed to process payment:', error)
-    alert('Payment failed: ' + (error.message || 'Unknown error'))
+    alert(t('orders.paymentFailed'))
   }
 }
 </script>

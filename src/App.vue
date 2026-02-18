@@ -15,7 +15,7 @@
       
       <!-- 标题 -->
       <v-toolbar-title class="text-h6 font-weight-bold">
-        ERP System
+        {{ $t('app.title') }}
       </v-toolbar-title>
       
       <v-spacer></v-spacer>

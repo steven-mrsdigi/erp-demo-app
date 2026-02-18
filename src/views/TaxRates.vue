@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="d-flex align-center justify-space-between mb-4">
-      <h1 class="text-h5 text-sm-h4">Tax Rates</h1>
+      <h1 class="text-h5 text-sm-h4">{{ $t('taxRates.title') }}</h1>
       <v-btn 
         color="primary" 
         :size="isMobile ? 'small' : 'default'"
         @click="openAddDialog"
         prepend-icon="mdi-plus"
       >
-        <span class="d-none d-sm-inline">Add Tax Rate</span>
+        <span class="d-none d-sm-inline">{{ $t('taxRates.addTaxRate') }}</span>
         <span class="d-sm-none">{{ $t("common.add") }}</span>
       </v-btn>
     </div>
@@ -29,7 +29,7 @@
       
       <template v-slot:item.is_default="{ item }">
         <v-chip :color="item.is_default ? 'success' : 'grey'" size="small">
-          {{ item.is_default ? 'Default' : 'No' }}
+          {{ item.is_default ? $t('taxRates.default') : $t('taxRates.no') }}
         </v-chip>
       </template>
       
@@ -55,16 +55,16 @@
               </v-chip>
             </v-card-title>
             <v-card-text>
-              <div class="text-body-2">{{ rate.description || 'No description' }}</div>
+              <div class="text-body-2">{{ rate.description || $t('common.noDescription') }}</div>
             </v-card-text>
             <v-card-actions>
               <v-btn size="small" variant="text" @click="editItem(rate)">
                 <v-icon size="small" class="mr-1">mdi-pencil</v-icon>
-                Edit
+                {{ $t('common.edit') }}
               </v-btn>
               <v-btn size="small" variant="text" color="error" @click="deleteItem(rate)">
                 <v-icon size="small" class="mr-1">mdi-delete</v-icon>
-                Delete
+                {{ $t('common.delete') }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -74,29 +74,29 @@
 
     <!-- Empty State -->
     <v-alert v-if="!loading && taxRates.length === 0" type="info" class="mt-4">
-      No tax rates found. Click "Add Tax Rate" to create one.
+      {{ $t('taxRates.noTaxRates') }}
     </v-alert>
 
     <!-- Add/Edit Dialog -->
     <v-dialog v-model="showDialog" max-width="500" :fullscreen="isMobile">
       <v-card>
         <v-card-title class="text-h6">
-          {{ isEditing ? 'Edit Tax Rate' : 'Add Tax Rate' }}
+          {{ isEditing ? $t('taxRates.editTaxRate') : $t('taxRates.addTaxRate') }}
           <v-spacer></v-spacer>
           <v-btn icon @click="showDialog = false" class="d-md-none">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <v-text-field v-model="form.name" label="Tax Name" required density="comfortable" placeholder="e.g., GST 5%"></v-text-field>
-          <v-text-field v-model="form.rate" label="Rate" type="number" suffix="%" required density="comfortable" placeholder="5"></v-text-field>
-          <v-textarea v-model="form.description" label="Description" rows="2" density="comfortable"></v-textarea>
-          <v-switch v-model="form.is_default" label="Set as default tax rate" density="comfortable"></v-switch>
+          <v-text-field v-model="form.name" :label="$t('taxRates.taxName')" required density="comfortable"></v-text-field>
+          <v-text-field v-model="form.rate" :label="$t('taxRates.rate')" type="number" suffix="%" required density="comfortable"></v-text-field>
+          <v-textarea v-model="form.description" :label="$t('common.description')" rows="2" density="comfortable"></v-textarea>
+          <v-switch v-model="form.is_default" :label="$t('taxRates.setAsDefault')" density="comfortable"></v-switch>
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
           <v-btn text @click="showDialog = false">{{ $t("common.cancel") }}</v-btn>
-          <v-btn color="primary" @click="saveTaxRate">{{ isEditing ? 'Update' : 'Save' }}</v-btn>
+          <v-btn color="primary" @click="saveTaxRate">{{ isEditing ? $t('common.update') : $t('common.save') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -107,9 +107,11 @@
 import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useDisplay } from 'vuetify'
+import { useI18n } from 'vue-i18n'
 
 const { get, post, patch, del, loading: apiLoading } = useApi()
 const { mdAndUp } = useDisplay()
+const { t } = useI18n()
 
 const isMobile = computed(() => !mdAndUp.value)
 
@@ -127,13 +129,13 @@ const form = ref({
   is_default: false
 })
 
-const headers = [
-  { title: 'Name', key: 'name', sortable: true },
-  { title: 'Rate', key: 'rate', sortable: true, width: '100px' },
-  { title: 'Description', key: 'description', sortable: true },
-  { title: 'Default', key: 'is_default', sortable: true, width: '100px' },
-  { title: 'Actions', key: 'actions', sortable: false, width: '100px' }
-]
+const headers = computed(() => [
+  { title: t('common.name'), key: 'name', sortable: true },
+  { title: t('taxRates.rate'), key: 'rate', sortable: true, width: '100px' },
+  { title: t('common.description'), key: 'description', sortable: true },
+  { title: t('taxRates.isDefault'), key: 'is_default', sortable: true, width: '100px' },
+  { title: t('common.actions'), key: 'actions', sortable: false, width: '100px' }
+])
 
 onMounted(async () => {
   await loadData()
@@ -188,18 +190,16 @@ async function saveTaxRate() {
     await loadData()
   } catch (error) {
     console.error('Failed to save tax rate:', error)
-    alert('Failed to save: ' + (error.message || 'Unknown error'))
   }
 }
 
 async function deleteItem(item) {
-  if (!confirm(`Delete "${item.name}"?`)) return
+  if (!confirm(t('taxRates.deleteConfirm', { name: item.name }))) return
   try {
     await del(`/tax-rates?id=${item.id}`)
     await loadData()
   } catch (error) {
     console.error('Failed to delete:', error)
-    alert('Failed to delete: ' + (error.message || 'Unknown error'))
   }
 }
 </script>

@@ -31,10 +31,41 @@
     "noData": "沒有數據",
     "confirmDelete": "確認刪除",
     "more": "更多",
-    "menu": "菜單"
+    "menu": "菜單",
+    "noCompany": "無公司",
+    "noEmail": "無電郵",
+    "noPhone": "無電話",
+    "noContact": "無聯絡人",
+    "noDescription": "無描述",
+    "uncategorized": "未分類",
+    "selectReport": "選擇報表",
+    "recordMovement": "記錄變動",
+    "processPayment": "處理付款",
+    "paymentMethod": "付款方式",
+    "amountPaid": "付款金額",
+    "reference": "參考編號",
+    "confirmPayment": "確認付款",
+    "paymentProcessed": "付款處理成功！",
+    "paymentFailed": "付款失敗",
+    "failedToDelete": "刪除失敗",
+    "failedToSave": "保存失敗",
+    "failedToLoad": "加載失敗",
+    "unknownError": "未知錯誤",
+    "units": "單位",
+    "sold": "已售",
+    "orders": "訂單",
+    "products": "產品",
+    "left": "剩餘",
+    "product": "產品",
+    "qty": "數量",
+    "notes": "備註"
   },
   "language": {
-    "title": "語言"
+    "title": "語言",
+    "english": "English",
+    "chineseS": "简体中文",
+    "chineseT": "繁體中文",
+    "french": "Français"
   },
   "nav": {
     "dashboard": "儀表盤",
@@ -45,6 +76,16 @@
     "inventory": "庫存",
     "taxRates": "稅率",
     "reports": "報表"
+  },
+  "dashboard": {
+    "title": "儀表盤",
+    "products": "產品",
+    "customers": "客戶",
+    "orders": "訂單",
+    "revenue": "收入",
+    "recentOrders": "最近訂單",
+    "lowStockAlert": "庫存不足警告",
+    "allProductsSufficientStock": "所有產品庫存充足！"
   },
   "products": {
     "title": "產品管理",
@@ -68,7 +109,9 @@
     "phone": "電話",
     "company": "公司",
     "address": "地址",
-    "contact": "聯絡人"
+    "contact": "聯絡人",
+    "deleteConfirm": "確定要刪除此客戶嗎？",
+    "noCustomers": "沒有找到客戶。點擊\\\"添加客戶\\\"創建一個。"
   },
   "orders": {
     "title": "訂單管理",
@@ -89,7 +132,16 @@
     "reference": "參考編號",
     "confirmPayment": "確認付款",
     "selectCustomer": "選擇客戶",
-    "orderItems": "訂單項目"
+    "orderItems": "訂單項目",
+    "pay": "付款",
+    "noOrders": "沒有找到訂單。點擊\\\"創建訂單\\\"創建一個。",
+    "unknownCustomer": "未知客戶",
+    "orderItemsTitle": "訂單項目",
+    "addNewItem": "添加項目",
+    "product": "產品",
+    "qty": "數量",
+    "unitPrice": "單價",
+    "itemSubtotal": "小計"
   },
   "inventory": {
     "title": "庫存管理",
@@ -99,7 +151,20 @@
     "totalIn": "總入庫",
     "totalOut": "總出庫",
     "currentStock": "當前庫存",
-    "recentMovements": "最近變動"
+    "recentMovements": "最近變動",
+    "recordMovementTitle": "記錄庫存變動",
+    "selectProduct": "選擇產品",
+    "movementType": "變動類型",
+    "unitCost": "單位成本",
+    "notes": "備註",
+    "stockIn": "入庫（採購）",
+    "stockOut": "出庫（銷售）",
+    "adjustment": "調整",
+    "onHand": "現有",
+    "allocated": "已分配",
+    "available": "可用",
+    "type": "類型",
+    "noInventory": "沒有庫存數據"
   },
   "taxRates": {
     "title": "稅率管理",
@@ -107,23 +172,68 @@
     "editTaxRate": "編輯稅率",
     "rate": "稅率",
     "isDefault": "默認",
-    "setAsDefault": "設為默認稅率"
+    "setAsDefault": "設為默認稅率",
+    "taxName": "稅名",
+    "noTaxRates": "沒有找到稅率。點擊\\\"添加稅率\\\"創建一個。",
+    "deleteConfirm": "刪除",
+    "default": "默認",
+    "no": "否"
   },
   "vendors": {
     "title": "供應商管理",
     "addVendor": "添加供應商",
     "editVendor": "編輯供應商",
     "contactPerson": "聯絡人",
-    "paymentTerms": "付款條件"
+    "paymentTerms": "付款條件",
+    "vendorName": "供應商名稱",
+    "contact": "聯絡人",
+    "email": "電郵",
+    "phone": "電話",
+    "address": "地址",
+    "taxId": "稅號",
+    "notes": "備註",
+    "noVendors": "沒有找到供應商。點擊\\\"添加供應商\\\"創建一個。",
+    "noContact": "無聯絡人",
+    "na": "無",
+    "paymentTermsPlaceholder": "例如：30 天淨付款"
+  },
+  "reports": {
+    "title": "報表",
+    "products": "產品",
+    "customers": "客戶",
+    "selectReport": "選擇報表",
+    "dashboardOverview": "儀表板概覽",
+    "salesReport": "銷售報表",
+    "inventoryValuation": "庫存估值",
+    "topProducts": "熱門產品",
+    "dailySales": "每日銷售（最近 30 天）",
+    "inventoryByCategory": "按類別的庫存估值",
+    "topSellingProducts": "熱銷產品（最近 30 天）",
+    "lowStockAlert": "庫存不足警告",
+    "selectReportToView": "選擇要查看的報表",
+    "date": "日期",
+    "orderCount": "訂單數",
+    "totalSales": "銷售額",
+    "category": "類別",
+    "productCount": "產品數",
+    "totalUnits": "總單位數",
+    "totalValue": "總價值",
+    "product": "產品",
+    "sku": "SKU",
+    "sold": "已售",
+    "revenue": "收入"
   },
   "theme": {
     "light": "亮色模式",
     "dark": "暗黑模式"
   },
-  "language": {
-    "english": "English",
-    "chineseS": "简体中文",
-    "chineseT": "繁體中文",
-    "french": "Français"
+  "paymentMethods": {
+    "cash": "現金",
+    "creditCard": "信用卡",
+    "bankTransfer": "銀行轉賬",
+    "check": "支票"
+  },
+  "app": {
+    "title": "ERP 示範"
   }
 }
