@@ -108,6 +108,28 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Delete Confirmation Dialog -->
+    <v-dialog v-model="showDeleteDialog" max-width="400">
+      <v-card>
+        <v-card-title class="text-h6">
+          <v-icon color="error" class="mr-2">mdi-alert</v-icon>
+          {{ $t('common.confirmDelete') }}
+        </v-card-title>
+        <v-card-text>
+          {{ $t('customers.deleteConfirm') }} "<strong>{{ customerToDelete?.name }}</strong>"?<br>
+          <span class="text-caption text-grey">{{ customerToDelete?.company || $t('common.noCompany') }}</span>
+          <v-alert v-if="deleteError" type="error" class="mt-3" density="compact">
+            {{ deleteError }}
+          </v-alert>
+        </v-card-text>
+        <v-card-actions class="pa-4">
+          <v-spacer></v-spacer>
+          <v-btn text @click="showDeleteDialog = false">{{ $t('common.cancel') }}</v-btn>
+          <v-btn color="error" @click="confirmDelete" :loading="deleting">{{ $t('common.delete') }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -119,7 +141,7 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const { get, post, patch, loading } = useApi()
+const { get, post, patch, delete: del, loading } = useApi()
 const { mdAndUp } = useDisplay()
 
 const isMobile = computed(() => !mdAndUp.value)
@@ -129,6 +151,11 @@ const showAddDialog = ref(false)
 const isEditing = ref(false)
 const editingCustomerId = ref(null)
 const sortBy = ref([{ key: 'name', order: 'asc' }])
+
+const showDeleteDialog = ref(false)
+const customerToDelete = ref(null)
+const deleteError = ref('')
+const deleting = ref(false)
 
 const newCustomer = ref({
   name: '',
@@ -207,6 +234,27 @@ function editItem(item) {
 }
 
 function deleteItem(item) {
-  console.log('Delete:', item)
+  customerToDelete.value = item
+  deleteError.value = ''
+  showDeleteDialog.value = true
+}
+
+async function confirmDelete() {
+  if (!customerToDelete.value) return
+  
+  deleting.value = true
+  deleteError.value = ''
+  
+  try {
+    await del(`/customers?id=${customerToDelete.value.id}`)
+    showDeleteDialog.value = false
+    customerToDelete.value = null
+    await loadData()
+  } catch (error) {
+    console.error('Failed to delete customer:', error)
+    deleteError.value = error.message || 'Failed to delete customer.'
+  } finally {
+    deleting.value = false
+  }
 }
 </script>
